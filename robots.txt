@@ -1,1 +1,1 @@
-Sitemap: https://xpire.github.io/blog/sitemap.xml
+Sitemap: http://blog.justinor.dev//sitemap.xml
