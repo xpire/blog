@@ -1,1 +1,1 @@
-Sitemap: http://blog.justinor.dev/sitemap.xml
+Sitemap: https://blog.justinor.dev/sitemap.xml
