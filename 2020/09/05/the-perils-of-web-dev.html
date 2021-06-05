@@ -1,0 +1,111 @@
+<p>When I first came up with the idea to highlight the current page with a rounded box, it sounded really easy to implement. I even decided to go really simple and make it just invert the background. So in <code class="language-plaintext highlighter-rouge">light</code> mode, it would be a black box which had white text insde, and the opposite for dark mode. What could go wrong?</p>
+
+<blockquote>
+  <p>everything.</p>
+</blockquote>
+
+<p>Lets go through some of the blood sweat and tears I went through so you don’t have to go through the same!</p>
+
+<h1 id="inverting-colors">Inverting Colors</h1>
+
+<p>Essentially, I saw this css-tricks article about <a href="https://css-tricks.com/methods-contrasting-text-backgrounds/">contrasting text backgrounds</a> which involved using the <code class="language-plaintext highlighter-rouge">mix-blend-mode: difference;</code> CSS on the foreground so that it would invert its background. This would work flawlessly for the dark background with white foreground, and its also the example they gave in this article:</p>
+
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">header</span> <span class="p">{</span>
+  <span class="nl">background</span><span class="p">:</span> <span class="sx">url(black-and-white-image.jpg)</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nt">h2</span> <span class="p">{</span>
+  <span class="nl">color</span><span class="p">:</span> <span class="no">white</span><span class="p">;</span>
+  <span class="py">mix-blend-mode</span><span class="p">:</span> <span class="n">difference</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>However, try to do it for the opposite case and things come crashing down.</p>
+
+<h2 id="try-1-backdrop-filter">Try 1: backdrop-filter</h2>
+
+<p>I initially tried using this CSS, which applies a filter to the background of this image - this is actually how I have blurred everything when a user clicks the sandwich menu in mobile view. When combined with <code class="language-plaintext highlighter-rouge">contrast(2)</code> I was able to get commendable results on chrome. However, as soon as I tried using the website with firefox, the backdrop filter was no where to be found! This is because Mozilla Firefox have <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter">hidden the feature behind an experimental flag</a>…</p>
+
+<h2 id="try-2-back-to-mix-blend-mode">Try 2: back to mix-blend-mode</h2>
+
+<p>So I went back to the original method, and decided on figuring out how to have this inverted color idea work for both light and dark modes. Essentially, I’ve found that I need to do the following things:</p>
+
+<ul>
+  <li>color the text normally</li>
+  <li>color the inverting div <strong>white</strong>, with <code class="language-plaintext highlighter-rouge">mix-blend-mode: difference</code></li>
+  <li><strong>wrap everything in a div which provides the colors:</strong>
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">background: var(--color-background)</code></li>
+      <li><code class="language-plaintext highlighter-rouge">color: var(--color-text)</code></li>
+      <li>transitions to make toggling the color easier on the eye</li>
+    </ul>
+  </li>
+</ul>
+
+<p>These things in <strong>bold</strong> took me very long to figure out~</p>
+
+<p>Especially the <strong>div that provides colors</strong>, you can’t apply the color to the body, it needs to be in a div you style, or else in Chrome it results in the <code class="language-plaintext highlighter-rouge">mix-blend-mode</code> failing, BUT IT WORKS FINE IN FIREFOX!!</p>
+
+<p>So many times, it would either only work in chrome, only work in firefox, only dark mode works, only light mode works. Shout out to my <a href="https://atharvdamle.com/">friend</a> who provided me support in my darkest moments, he was the one to suggesting making the inverting div <strong>white</strong>, very smart guy.</p>
+
+<p>In code, here is a watered down example consisting only the color variables required to pull off this effect (note that <code class="language-plaintext highlighter-rouge">Underline</code> should have absolute position and overlap with the text in <code class="language-plaintext highlighter-rouge">StyledLink</code>):</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// styles</span>
+<span class="kd">const</span> <span class="nx">ColorProvider</span> <span class="o">=</span> <span class="nx">styled</span><span class="p">.</span><span class="nx">div</span><span class="s2">`
+  background: var(--color-background);
+  color: var(--color-text);
+  transition: all 0.25s linear;
+`</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">Underline</span> <span class="o">=</span> <span class="nx">styled</span><span class="p">(</span><span class="nx">motion</span><span class="p">.</span><span class="nx">div</span><span class="p">)</span><span class="s2">`
+  mix-blend-mode: difference;
+  background-color: white;
+`</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">StyledLink</span> <span class="o">=</span> <span class="nx">styled</span><span class="p">(</span><span class="nx">Link</span><span class="p">)</span><span class="s2">`
+  color: var(--color-text);
+`</span><span class="p">;</span>
+
+<span class="c1">// code</span>
+<span class="p">&lt;</span><span class="nc">ColorProvider</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nc">Underline</span> <span class="p">/&gt;</span>
+  <span class="p">&lt;</span><span class="nc">StyledLink</span><span class="p">&gt;</span>Home<span class="p">&lt;/</span><span class="nc">StyledLink</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nc">ColorProvider</span><span class="p">&gt;;</span>
+</code></pre></div></div>
+
+<h1 id="fouc">FOUC</h1>
+
+<p>Flash of Unstyled Content is a prominent problem in Gatsby, as part of the reason why it can serve content so fast is because it prebuilds all the html. Because it can serve the html so fast, more often than not, the html loads first before CSS styles are loaded in, resulting in blank white unstyled content flickering before the styles load in. I did not like this.</p>
+
+<h2 id="try-1---maybe-material-ui">Try 1 - Maybe Material-ui?</h2>
+
+<p>I was using <code class="language-plaintext highlighter-rouge">material-ui</code> as its my goto web-ui toolkit. However, I nearly considered giving up this toolkit while making this website. It appeared that whenever I used their <code class="language-plaintext highlighter-rouge">themeProvider</code>, it would completely break my styles, display a FOUC, and transitions applied to the body did not apply to any <code class="language-plaintext highlighter-rouge">material-ui</code> components.</p>
+
+<p>However, I soon learnt that I was mistaken, as I had followed the documentation for <code class="language-plaintext highlighter-rouge">material-ui</code> blindly, and used the <code class="language-plaintext highlighter-rouge">&lt;CssBaseline /&gt;</code> component because they used it. Short answer - this will screw up the original css in the page. This was particularly bad for my case, as I needed to define the themes with css variables or else a FOUC would occur on every page load as Gatsby would not know about the style.</p>
+
+<p>However, even without <code class="language-plaintext highlighter-rouge">&lt;CssBaseline /&gt;</code>, things were still going sour, FOUC was showing, I was still awake at 2am trying to fix this.</p>
+
+<h2 id="try-2---styledcomponents">Try 2 - styled(components)</h2>
+
+<p>TURNS OUT: I’ve been applying global styles through a component <code class="language-plaintext highlighter-rouge">createGlobalStyle</code> from <code class="language-plaintext highlighter-rouge">'styled-components'</code>. This applied a style to the body which set the <code class="language-plaintext highlighter-rouge">background-color</code> and <code class="language-plaintext highlighter-rouge">color</code>. It doesn’t seem to work immediately on page load, resulting in a flash of white in dark mode, before a transition to the proper color. So now, I create my own div styled with in-line CSS defining those color css variables. The result works like a charm!</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">ColorProvider</span> <span class="o">=</span> <span class="nx">styled</span><span class="p">.</span><span class="nx">div</span><span class="s2">`
+  background: var(--color-background);
+  color: var(--color-text);
+  transition: all 0.25s linear;
+`</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">Layout</span><span class="p">:</span> <span class="nx">React</span><span class="p">.</span><span class="nx">FC</span> <span class="o">=</span> <span class="p">({</span> <span class="nx">children</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;&gt;</span>
+      <span class="p">&lt;</span><span class="nc">ColorProvider</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nc">Header</span> <span class="p">/&gt;</span>
+        <span class="si">{</span><span class="nx">children</span><span class="si">}</span>
+        <span class="p">&lt;</span><span class="nc">Footer</span> <span class="p">/&gt;</span>
+      <span class="p">&lt;/</span><span class="nc">ColorProvider</span><span class="p">&gt;</span>
+    <span class="p">&lt;/&gt;</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>This is only the stuff I remembered that I fixed, there was so much trial and error, and me reloading the site 100 times, that I’ve probably forgotten half of the stuff I tried to do to fix these problems I had.</p>
