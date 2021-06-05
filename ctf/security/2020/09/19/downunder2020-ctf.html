@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Down Under 2020 CTF writeup | blog.justinor.dev</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Down Under 2020 CTF writeup" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Stuff I learnt from the downunder ctf." />
+<meta property="og:description" content="Stuff I learnt from the downunder ctf." />
+<link rel="canonical" href="https://blog.justinor.dev/ctf/security/2020/09/19/downunder2020-ctf.html" />
+<meta property="og:url" content="https://blog.justinor.dev/ctf/security/2020/09/19/downunder2020-ctf.html" />
+<meta property="og:site_name" content="blog.justinor.dev" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-09-19T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"Stuff I learnt from the downunder ctf.","url":"https://blog.justinor.dev/ctf/security/2020/09/19/downunder2020-ctf.html","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.justinor.dev/ctf/security/2020/09/19/downunder2020-ctf.html"},"headline":"Down Under 2020 CTF writeup","dateModified":"2020-09-19T00:00:00-05:00","datePublished":"2020-09-19T00:00:00-05:00","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://blog.justinor.dev/feed.xml" title="blog.justinor.dev" /><link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">blog.justinor.dev</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About Me</a><a class="page-link" href="/search/">Search</a><a class="page-link" href="/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Down Under 2020 CTF writeup</h1><p class="page-description">Stuff I learnt from the downunder ctf.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-09-19T00:00:00-05:00" itemprop="datePublished">
+        Sep 19, 2020
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      2 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/categories/#ctf">ctf</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#security">security</a>
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#forensics">Forensics</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#spot-the-difference">Spot the Difference</a></li>
+<li class="toc-entry toc-h2"><a href="#i-love-scomo">I Love Scomo</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#web">web</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#web-badmin">Web Badmin</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#crypto">crypto</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#babyrsa">babyrsa</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#misc">misc</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#in-a-pickle">In a pickle</a></li>
+<li class="toc-entry toc-h2"><a href="#addition">Addition</a></li>
+<li class="toc-entry toc-h2"><a href="#pretty-good-pitfall">Pretty Good Pitfall</a></li>
+<li class="toc-entry toc-h2"><a href="#tim-tams">Tim Tams</a></li>
+<li class="toc-entry toc-h2"><a href="#koala-habitat">Koala Habitat</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#osint">OSINT</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#welcome-to-petstagram">Welcome to Petstagram</a></li>
+</ul>
+</li>
+</ul><p>Text goes here.</p>
+
+<h1 id="forensics">
+<a class="anchor" href="#forensics" aria-hidden="true"><span class="octicon octicon-link"></span></a>Forensics</h1>
+
+<h2 id="spot-the-difference">
+<a class="anchor" href="#spot-the-difference" aria-hidden="true"><span class="octicon octicon-link"></span></a>Spot the Difference</h2>
+
+<blockquote>
+  <p>327
+easy
+Author: TheDon</p>
+
+  <p>An employee’s files have been captured by the first responders. The suspect has been accused of using images to leak confidential infomation, steghide has been authorised to decrypt any images for evidence!</p>
+
+  <p>Files: https://storage.googleapis.com/files.duc.tf/uploads/SpotTheDifference/Publish.zip (sha256: be6fd22e658b51124da5a608cc50e5fdc6698772a024cfe4dd9fb393f6ee5227)</p>
+</blockquote>
+
+<h2 id="i-love-scomo">
+<a class="anchor" href="#i-love-scomo" aria-hidden="true"><span class="octicon octicon-link"></span></a>I Love Scomo</h2>
+
+<blockquote>
+  <p>440
+medium</p>
+
+  <p>I really do love Scott Morrison! &lt;3 &lt;3 &lt;3</p>
+
+  <p>However, some people don’t like me because of my secret crush :(. So I have to hide my secrets using steganography. This is my hidden space, where I can dream about being with Scomo and I really appreciate that no one tries to reveal my secret message for him.</p>
+
+  <p>Author: ghostccamm</p>
+
+  <p>Attached files:</p>
+
+  <div class="language-plaintext highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code>ilovescomo.jpg (sha256: c1a820c8b17c179b93a1bdf677b01080a27cec2d130e58d50117ef669b4ab9af)
+</code></pre></div>  </div>
+</blockquote>
+
+<h1 id="web">
+<a class="anchor" href="#web" aria-hidden="true"><span class="octicon octicon-link"></span></a>web</h1>
+
+<h2 id="web-badmin">
+<a class="anchor" href="#web-badmin" aria-hidden="true"><span class="octicon octicon-link"></span></a>Web Badmin</h2>
+
+<blockquote>
+  <p>370
+easy</p>
+
+  <p>Author: Blue Alder</p>
+
+  <p>We launched a game and now it is no longer launched :( can you figure out what happened plox. HALP</p>
+
+  <p>https://chal.duc.tf:30102</p>
+</blockquote>
+
+<h1 id="crypto">
+<a class="anchor" href="#crypto" aria-hidden="true"><span class="octicon octicon-link"></span></a>crypto</h1>
+
+<h2 id="babyrsa">
+<a class="anchor" href="#babyrsa" aria-hidden="true"><span class="octicon octicon-link"></span></a>babyrsa</h2>
+
+<blockquote>
+  <p>200
+easy</p>
+
+  <p>Author: joseph</p>
+
+  <p>This is just RSA for babies!</p>
+
+  <p>Attached files:</p>
+
+  <p>babyrsa.py (sha256: 37676169a895f541454f4a93a943a7718c09bd245233e1fa38eb1f85181e3fe8)
+output.txt (sha256: b1a705ce9efd6403006b00ecccc8225e7e103b704dc276797eafa68d26fba068)</p>
+</blockquote>
+
+<h1 id="misc">
+<a class="anchor" href="#misc" aria-hidden="true"><span class="octicon octicon-link"></span></a>misc</h1>
+
+<h2 id="in-a-pickle">
+<a class="anchor" href="#in-a-pickle" aria-hidden="true"><span class="octicon octicon-link"></span></a>In a pickle</h2>
+
+<blockquote>
+  <p>200
+easy</p>
+
+  <p>Author: n00bmaster</p>
+
+  <p>We managed to intercept communication between und3rm4t3r and his hacker friends. However it is obfuscated using something. We just can’t figure out what it is. Maybe you can help us find the flag?</p>
+</blockquote>
+
+<h2 id="addition">
+<a class="anchor" href="#addition" aria-hidden="true"><span class="octicon octicon-link"></span></a>Addition</h2>
+
+<blockquote>
+  <p>200
+easy</p>
+
+  <p>Author: n00bmaster</p>
+
+  <p>Joe is aiming to become the next supreme coder by trying to make his code smaller and smaller. His most recent project is a simple calculator which he reckons is super secure because of the “filters” he has in place. However, he thinks that he knows more than everyone around him. Put Joe in his place and grab the flag.</p>
+</blockquote>
+
+<h2 id="pretty-good-pitfall">
+<a class="anchor" href="#pretty-good-pitfall" aria-hidden="true"><span class="octicon octicon-link"></span></a>Pretty Good Pitfall</h2>
+
+<blockquote>
+  <p>200
+easy</p>
+
+  <p>Author: k0wa1ski#6150</p>
+
+  <p>PGP/GPG/GnuPG/OpenPGP is great! I reckon you can’t find the message, because it looks scrambled!</p>
+
+  <p>Attached files: flag.txt.gpg (sha256: dad03ac28b7294c8696eeac21d11159c3dcfc8ed226438804fe82b4fb9f6ad87)</p>
+</blockquote>
+
+<h2 id="tim-tams">
+<a class="anchor" href="#tim-tams" aria-hidden="true"><span class="octicon octicon-link"></span></a>Tim Tams</h2>
+
+<blockquote>
+  <p>273
+easy</p>
+
+  <p>Author: QUT_WH</p>
+
+  <p>When I eat too many Tim Tams, I get rather slow!</p>
+
+  <p>WARNING You will want to turn down your audio for this one!</p>
+
+  <p>Download: https://storage.googleapis.com/files.duc.tf/uploads/Clive.wav</p>
+
+  <p>File Hash (SHA256): 4C1CC12D002956A83E168CA650B776B55AAC36F2131D0DF617BE7D55DBEF93D1</p>
+</blockquote>
+
+<h2 id="koala-habitat">
+<a class="anchor" href="#koala-habitat" aria-hidden="true"><span class="octicon octicon-link"></span></a>Koala Habitat</h2>
+
+<blockquote>
+  <p>462
+easy</p>
+
+  <p>Author: QUT_WH</p>
+
+  <p>What an Aussie Banger!</p>
+
+  <p>Flag Format: STRING you end up with after solving challenge –&gt; Spaces seperate the words</p>
+
+  <p>NO DUCTF{} required</p>
+
+  <p>Attached files:</p>
+
+  <div class="language-plaintext highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code>gumtrees.wav (sha256: E80D485C8A6F3818F9946EDE5283CDF4CCF7276A02BE76EA23A88AF21DD15843)
+</code></pre></div>  </div>
+</blockquote>
+
+<h1 id="osint">
+<a class="anchor" href="#osint" aria-hidden="true"><span class="octicon octicon-link"></span></a>OSINT</h1>
+
+<h2 id="welcome-to-petstagram">
+<a class="anchor" href="#welcome-to-petstagram" aria-hidden="true"><span class="octicon octicon-link"></span></a>Welcome to Petstagram</h2>
+
+<blockquote>
+  <p>100
+beginner</p>
+
+  <p>Who is Alexandros the cat exactly? And who is this mysterious “mum” he keeps talking about?</p>
+
+  <p>Submit his mum’s full name in lowercase and with underscores instead of spaces, as the flag: DUCTF{name}</p>
+
+  <p>Author: dahlia</p>
+</blockquote>
+
+  </div><a class="u-url" href="/ctf/security/2020/09/19/downunder2020-ctf.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Justin Or&#39;s personal Blog!</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/xpire" title="xpire"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/just_in_awe" title="just_in_awe"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
