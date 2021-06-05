@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Sphinx Algorithm Explained | Justin’s Blog</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Sphinx Algorithm Explained" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Explaining how the SPHINX password scheme works and why its magic" />
+<meta property="og:description" content="Explaining how the SPHINX password scheme works and why its magic" />
+<link rel="canonical" href="https://blog.justinor.dev/jupyter/security/sphinx/somethingawesome/2021/05/06/sphinx-algorithm-overview.html" />
+<meta property="og:url" content="https://blog.justinor.dev/jupyter/security/sphinx/somethingawesome/2021/05/06/sphinx-algorithm-overview.html" />
+<meta property="og:site_name" content="Justin’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-05-06T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"Explaining how the SPHINX password scheme works and why its magic","url":"https://blog.justinor.dev/jupyter/security/sphinx/somethingawesome/2021/05/06/sphinx-algorithm-overview.html","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.justinor.dev/jupyter/security/sphinx/somethingawesome/2021/05/06/sphinx-algorithm-overview.html"},"headline":"Sphinx Algorithm Explained","dateModified":"2021-05-06T00:00:00-05:00","datePublished":"2021-05-06T00:00:00-05:00","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://blog.justinor.dev/feed.xml" title="Justin's Blog" /><link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Justin&#39;s Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About Me</a><a class="page-link" href="/search/">Search</a><a class="page-link" href="/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Sphinx Algorithm Explained</h1><p class="page-description">Explaining how the SPHINX password scheme works and why its magic</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-05-06T00:00:00-05:00" itemprop="datePublished">
+        May 6, 2021
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      20 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/categories/#jupyter">jupyter</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#security">security</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#sphinx">sphinx</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#somethingAwesome">somethingAwesome</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/xpire/blog/tree/master/_notebooks/2021-05-06-sphinx-algorithm-overview.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/xpire/blog/master?filepath=_notebooks%2F2021-05-06-sphinx-algorithm-overview.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/xpire/blog/blob/master/_notebooks/2021-05-06-sphinx-algorithm-overview.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#Preliminary:-Diffie-Hellman-Shared-Secret">Preliminary: Diffie Hellman Shared Secret </a></li>
+<li class="toc-entry toc-h1"><a href="#Algorithm-Overview">Algorithm Overview </a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#N.B.">N.B. </a></li>
+<li class="toc-entry toc-h2"><a href="#Curve-definition">Curve definition </a></li>
+<li class="toc-entry toc-h2"><a href="#1.-Hashing-password-into-elliptic-curve">1. Hashing password into elliptic curve </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#1.1-HashToBase-Implementation">1.1 HashToBase Implementation </a></li>
+<li class="toc-entry toc-h3"><a href="#1.2-Simplified-SWU-Method-(5.2.3.)">1.2 Simplified SWU Method (5.2.3.) </a></li>
+<li class="toc-entry toc-h3"><a href="#Helper-functions">Helper functions </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#1.2.1-Testing-Correctness">1.2.1 Testing Correctness </a></li>
+<li class="toc-entry toc-h2"><a href="#1.3-Usage-of-SWU">1.3 Usage of SWU </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#2-SPHINX-architecture">2 SPHINX architecture </a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#steps-to-reproduce">steps to reproduce </a></li>
+<li class="toc-entry toc-h2"><a href="#2.1-Overview">2.1 Overview </a></li>
+<li class="toc-entry toc-h2"><a href="#2.2-Issues-I-ran-Into-during-Implementation">2.2 Issues I ran Into during Implementation </a></li>
+<li class="toc-entry toc-h2"><a href="#3.-Further-Work">3. Further Work </a></li>
+</ul>
+</li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2021-05-06-sphinx-algorithm-overview.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">ecdsa.ellipticcurve</span> <span class="k">as</span> <span class="nn">ecc</span>
+<span class="kn">import</span> <span class="nn">ecdsa.numbertheory</span> <span class="k">as</span> <span class="nn">nt</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Preliminary:-Diffie-Hellman-Shared-Secret">
+<a class="anchor" href="#Preliminary:-Diffie-Hellman-Shared-Secret" aria-hidden="true"><span class="octicon octicon-link"></span></a>Preliminary: Diffie Hellman Shared Secret<a class="anchor-link" href="#Preliminary:-Diffie-Hellman-Shared-Secret"> </a>
+</h2>
+<p>Elliptic Cryptography is based on the <a href="https://jeremykun.com/2014/03/31/elliptic-curve-diffie-hellman/">Discrete Logarithm Problem</a>. In essense, we can simplify the idea to</p>
+<blockquote>
+<p>Adding  is easy on elliptic curves,  but <strong>undoing</strong> addition seems hard</p>
+</blockquote>
+<p>More formally, we can give the following definition:Let $G$ be an additive  group, and let $x,y$ be elements of $G$ so that $x=ny$ for some integer $n$. The Discrete  Logarithm Problem asks one to find $n$ when given $x$ and $y$.
+In integers, this problem is quite easy.
+If I have:</p>
+<ul>
+<li>$x=12$</li>
+<li>$y=4185072$</li>
+</ul>
+<p>Then, I can compute that $y=41805072=348756*12=348756x \rightarrow  n=348756$.</p>
+<blockquote>
+<p>Division for integers is efficient, <strong>but for elliptic curves this is not the case</strong>.</p>
+</blockquote>
+<p>Here is a toy problem testing my understanding of DH's shared secret protocol.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">sendDH</span><span class="p">(</span><span class="n">privateKey</span><span class="p">,</span> <span class="n">generator</span><span class="p">,</span> <span class="n">sendFunction</span><span class="p">):</span>
+   <span class="k">return</span> <span class="n">sendFunction</span><span class="p">(</span><span class="n">privateKey</span> <span class="o">*</span> <span class="n">generator</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">receiveDH</span><span class="p">(</span><span class="n">privateKey</span><span class="p">,</span> <span class="n">receiveFunction</span><span class="p">):</span>
+   <span class="k">return</span> <span class="n">privateKey</span> <span class="o">*</span> <span class="n">receiveFunction</span><span class="p">()</span>
+
+<span class="n">prime</span> <span class="o">=</span> <span class="mi">3851</span>
+<span class="n">a</span> <span class="o">=</span> <span class="mi">324</span>
+<span class="n">b</span> <span class="o">=</span> <span class="mi">1287</span>
+<span class="n">myCurve</span> <span class="o">=</span> <span class="n">ecc</span><span class="o">.</span><span class="n">CurveFp</span><span class="p">(</span><span class="n">prime</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">basePoint</span> <span class="o">=</span> <span class="n">ecc</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">myCurve</span><span class="p">,</span> <span class="mi">920</span><span class="p">,</span> <span class="mi">303</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">aliceSecretKey</span> <span class="o">=</span> <span class="mi">233</span>    <span class="c1"># generateSecretKey(8)</span>
+<span class="n">bobSecretKey</span> <span class="o">=</span> <span class="mi">25</span>       <span class="c1"># generateSecretKey(8)</span>
+
+<span class="n">alicePublicKey</span> <span class="o">=</span> <span class="n">sendDH</span><span class="p">(</span><span class="n">aliceSecretKey</span><span class="p">,</span> <span class="n">basePoint</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">)</span>
+<span class="n">bobPublicKey</span> <span class="o">=</span> <span class="n">sendDH</span><span class="p">(</span><span class="n">bobSecretKey</span><span class="p">,</span> <span class="n">basePoint</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">sharedSecret1</span> <span class="o">=</span> <span class="n">receiveDH</span><span class="p">(</span><span class="n">bobSecretKey</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">alicePublicKey</span><span class="p">)</span>
+<span class="n">sharedSecret2</span> <span class="o">=</span> <span class="n">receiveDH</span><span class="p">(</span><span class="n">aliceSecretKey</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">bobPublicKey</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">myCurve</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">basePoint</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Shared secret is </span><span class="si">%s</span><span class="s1"> == </span><span class="si">%s</span><span class="s1">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">sharedSecret1</span><span class="p">,</span> <span class="n">sharedSecret2</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>CurveFp(p=3851, a=324, b=1287, h=1)
+(920,303)
+Shared secret is (1001,3826) == (1001,3826)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Algorithm-Overview">
+<a class="anchor" href="#Algorithm-Overview" aria-hidden="true"><span class="octicon octicon-link"></span></a>Algorithm Overview<a class="anchor-link" href="#Algorithm-Overview"> </a>
+</h1>
+<p>Steps to implement</p>
+<ol>
+<li>
+<p>Hashing password into elliptic curve</p>
+<ul>
+<li>PWD entered by user</li>
+<li>SHA-256 computation, hashing into the NIST P-256 Curve</li>
+<li>this is computed on input + iteration_counter $\rightarrow Z_q$.</li>
+<li>computed value is considered $x$ coord of a point on curve if $y$-value is associated with it is a quadratic residue (i.e. $x,y$ satisfy the curve equation).</li>
+<li>this is repeated until a curve element is obtained. (which is the output)</li>
+<li>Password is concatenated with domain name and input into H'. (ADD RESISTANCE AGAINST PHISHING)</li>
+</ul>
+</li>
+<li>FK-PTR OPRF protocol<ol>
+<li>EXTENSION:<ul>
+<li>Blind the password with OPRF<ul>
+<li>OPRF: $F_k(x)=H(x,(H'(x))^k)$<ul>
+<li>input $x$ from client</li>
+<li>$k$ is from device</li>
+<li>H maps from arbitrary length string $\rightarrow e \in \{0,1\}^\tau$, $\tau$ is a security parameter<ul>
+<li>Looking at the formula for OPRF, we assume that H(xbytearray, point in G) = $H(x || P_x || P_y)$</li>
+</ul>
+</li>
+<li>H' maps from arbitrary length string $\rightarrow g \in G$<ul>
+<li>H' is the "Hash into Elliptic Curve" function, which maps the password into a point on NIST P-256 curve</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>works over a group $G$ of prime order $p$ (e.g. NIST P-256 group)</li>
+</ul>
+</li>
+<li>extension picks a random number $\rho \in Z_q$ and raises the hash value of the input to the power $\rho$.<ul>
+<li>this blinding factor $\rho$ hides the password with information-theoretic security)
+SEND THIS AS $\alpha$</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>DEVICE<ul>
+<li>check if $\alpha$ is $\in G$</li>
+<li>compute and SEND BACK $\beta = \alpha^k$</li>
+</ul>
+</li>
+<li>BACK TO EXTENSION<ul>
+<li>check if $\beta$ is $\in G$</li>
+<li>raise the recieved value to the power of $\rho^{-1} \in Z_q$</li>
+<li>then compute the SHA-256 hash of calculated value.</li>
+</ul>
+</li>
+<li>BACK TO RWD PASSWORD<ul>
+<li>(same as PwdHash implementation)</li>
+<li>encoded to a random combination of letters, numbers and symbols matching the passwrod requirement of the visited website and entered into pwd field of login page.</li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="N.B.">
+<a class="anchor" href="#N.B." aria-hidden="true"><span class="octicon octicon-link"></span></a>N.B.<a class="anchor-link" href="#N.B."> </a>
+</h2>
+<ul>
+<li>taking the exponential in a group is just repetition of the operation<ul>
+<li>i.e. $\forall x \in G, n \in Z, x^n = \underbrace{x+...+x}_\text{n times}$.</li>
+<li>see this <a href="https://crypto.stackexchange.com/questions/57768/exponentiation-in-ecc">crypto stack exchange thread</a>
+</li>
+</ul>
+</li>
+<li>how to take the inverse power in a group<ul>
+<li>Raise the point to the power $a^{-1} \in Z_p$</li>
+<li>this is fairly easy to do with <a href="https://en.wikipedia.org/wiki/Modular_multiplicative_inverse">euclidean algorithm</a>
+</li>
+<li>see <a href="https://math.stackexchange.com/questions/471269/point-division-in-elliptic-curve-cryptography">stack exchange link</a> for more info</li>
+</ul>
+</li>
+<li>Instantiation assumes a cyclic group $G$ of prime order $q$, $|q|=\tau$, with generator $g$. <ul>
+<li>At init, User chooses master password pwd, while Device chooses and stores $k \leftarrow Z_q$.</li>
+</ul>
+</li>
+<li>H which looks like it accepts two arguments when it's called in $H(x, (H'(x))^k)$ really just means hash it all at once, by appending it.<ul>
+<li>in the paper, it describes this step as "Client hashes this value $(H'(pwd|domain))^k$ with the pwd to obtain rwd"</li>
+<li>in the implementation, they use <code>crypto_generichash_update()</code> from <a href="https://github.com/stef/libsphinx/blob/master/src/sphinx.c">source.</a>
+</li>
+<li>furthermore, in the documentation for <code>&lt;sodium.h&gt;</code> they use this function to compute the hash on a multi-part <a href="https://libsodium.gitbook.io/doc/hashing/generic_hashing#multi-part-example-with-a-key">example</a>
+</li>
+<li>there is a reddit thread which also explains how the function used can be used to hash variable length things such as a <a href="https://www.reddit.com/r/crypto/comments/7ooot2/using_libsodiums_generic_hash_to_hash_a_file/">stream</a>
+</li>
+</ul>
+</li>
+<li>the notation of $\{0,1\}^\tau$ means a bit string of length $\tau$<ul>
+<li>From this <a href="https://tools.ietf.org/html/draft-irtf-cfrg-hash-to-curve-01#page-4">paper on hashing into Elliptic Curves</a>, they describe the following notation:<ul>
+<li>"bitstring of arbitrary length is denoted as $\{0, 1\}^*$"</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>octet means base-256, and not to be confused with octal which is base-8</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Curve-definition">
+<a class="anchor" href="#Curve-definition" aria-hidden="true"><span class="octicon octicon-link"></span></a>Curve definition<a class="anchor-link" href="#Curve-definition"> </a>
+</h2>
+<p>Using the primitives from <code>ecdsa</code> package in python, we will create the following curve based on the parameters for P-256.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># NIST Curve P-256:</span>
+<span class="c1"># ORDER = 115792089210356248762697446949407573529996955224135760342422259061068512044369</span>
+<span class="n">PRIME</span> <span class="o">=</span> <span class="mi">115792089210356248762697446949407573530086143415290314195533631308867097853951</span>
+<span class="n">R</span> <span class="o">=</span> <span class="mi">115792089210356248762697446949407573529996955224135760342422259061068512044369</span>
+<span class="c1"># s = 0xc49d360886e704936a6678e1139d26b7819f7e90L</span>
+<span class="c1"># c = 0x7efba1662985be9403cb055c75d4f7e0ce8d84a9c5114abcaf3177680104fa0dL</span>
+<span class="n">A</span> <span class="o">=</span> <span class="o">-</span><span class="mi">3</span>
+<span class="n">B</span> <span class="o">=</span> <span class="mh">0x5AC635D8AA3A93E7B3EBBD55769886BC651D06B0CC53B0F63BCE3C3E27D2604B</span>
+<span class="n">Gx</span> <span class="o">=</span> <span class="mh">0x6B17D1F2E12C4247F8BCE6E563A440F277037D812DEB33A0F4A13945D898C296</span>
+<span class="n">Gy</span> <span class="o">=</span> <span class="mh">0x4FE342E2FE1A7F9B8EE7EB4A7C0F9E162BCE33576B315ECECBB6406837BF51F5</span>
+
+<span class="n">curve_256</span> <span class="o">=</span> <span class="n">ecc</span><span class="o">.</span><span class="n">CurveFp</span><span class="p">(</span><span class="n">PRIME</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">curve_256_generator</span> <span class="o">=</span> <span class="n">ecc</span><span class="o">.</span><span class="n">PointJacobi</span><span class="p">(</span><span class="n">curve_256</span><span class="p">,</span> <span class="n">Gx</span><span class="p">,</span> <span class="n">Gy</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">generator</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="1.-Hashing-password-into-elliptic-curve">
+<a class="anchor" href="#1.-Hashing-password-into-elliptic-curve" aria-hidden="true"><span class="octicon octicon-link"></span></a>1. Hashing password into elliptic curve<a class="anchor-link" href="#1.-Hashing-password-into-elliptic-curve"> </a>
+</h2>
+<h3 id="1.1-HashToBase-Implementation">
+<a class="anchor" href="#1.1-HashToBase-Implementation" aria-hidden="true"><span class="octicon octicon-link"></span></a>1.1 HashToBase Implementation<a class="anchor-link" href="#1.1-HashToBase-Implementation"> </a>
+</h3>
+<p>Here is a definition of the function:
+HashToBase(x): $H(x)[0:log_2(p) + 1]$, i.e., hash-truncate-reduce, where H is a cryptographic hash function, such as SHA256, and $p$ is the prime order of base field $F_p$.
+Here is some psuedo code:</p>
+
+<pre><code>HashToBase(x, i)
+
+Parameters:
+
+ H - cryptographic hash function to use
+ hbits - number of bits output by H
+ p - order of the base field Fp
+ label - context label for domain separation
+
+Preconditions:
+
+ floor(log2(p)) + 1 &gt;= hbits
+
+Input:
+
+ x - value to be hashed, an octet string
+ i - hash call index, a non-negative integer
+
+Output:
+
+ y - a value in the field Fp
+
+Steps:
+
+ 1. t1 = H("h2c" || label || I2OSP(i, 4) || x)
+ 2. t2 = OS2IP(t1)
+ 3. y = t2 (mod p)
+ 4. Output y
+
+where I2OSP, OS2IP [RFC8017] are used to convert an octet string to
+and from a non-negative integer, and a || b denotes concatenation of
+a and b.</code></pre>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">binascii</span> <span class="kn">import</span> <span class="n">hexlify</span><span class="p">,</span> <span class="n">unhexlify</span>
+<span class="kn">from</span> <span class="nn">hashlib</span> <span class="kn">import</span> <span class="n">sha1</span><span class="p">,</span> <span class="n">sha256</span><span class="p">,</span> <span class="n">sha384</span><span class="p">,</span> <span class="n">sha512</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">from</span> <span class="nn">ecdsa</span> <span class="kn">import</span> <span class="n">NIST256p</span>
+
+<span class="c1"># http://www.secg.org/sec2-v2.pdf</span>
+<span class="c1"># print(NIST256p.oid)</span>
+<span class="n">ORDER</span> <span class="o">=</span> <span class="n">NIST256p</span><span class="o">.</span><span class="n">order</span>
+
+<span class="c1"># https://github.com/bdauvergne/python-pkcs1/blob/master/pkcs1/primitives.py</span>
+<span class="k">def</span> <span class="nf">OS2IP</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="sd">'''Converts the byte string x representing an integer reprented using the</span>
+<span class="sd">       big-endian convient to an integer.</span>
+<span class="sd">    '''</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">hexlify</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1">#.binascii</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+
+<span class="c1"># https://github.com/bdauvergne/python-pkcs1/blob/master/pkcs1/primitives.py</span>
+<span class="k">def</span> <span class="nf">I2OSP</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">x_len</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">'''Converts the integer x to its big-endian representation of length</span>
+<span class="sd">       x_len.</span>
+<span class="sd">    '''</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">256</span><span class="o">**</span><span class="n">x_len</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Integer too large."</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="nb">hex</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="mi">2</span><span class="p">:]</span>
+    <span class="k">if</span> <span class="n">h</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'L'</span><span class="p">:</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">h</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="s1">'0</span><span class="si">%s</span><span class="s1">'</span> <span class="o">%</span> <span class="n">h</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">unhexlify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="c1">#.binascii</span>
+    <span class="k">return</span> <span class="sa">b</span><span class="s1">'</span><span class="se">\x00</span><span class="s1">'</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">x_len</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">+</span> <span class="n">x</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"OCT TEST: I2OSP(23) = </span><span class="si">{}</span><span class="s2">, and then OS2IP(I2OSP(23)) = </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">I2OSP</span><span class="p">(</span><span class="mi">23</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">OS2IP</span><span class="p">(</span><span class="n">I2OSP</span><span class="p">(</span><span class="mi">23</span><span class="p">,</span> <span class="mi">4</span><span class="p">))))</span>
+
+
+
+<span class="c1"># https://tools.ietf.org/html/draft-irtf-cfrg-hash-to-curve-02#appendix-C.5</span>
+<span class="k">def</span> <span class="nf">HashToBase</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s2">"label"</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="n">ORDER</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="sd">'''Hashes the bytearray x with a label string, the hash call index i, and</span>
+<span class="sd">       returns y, a value in the field F_p</span>
+<span class="sd">    '''</span>
+    <span class="n">H</span> <span class="o">=</span> <span class="n">sha256</span><span class="p">()</span>
+    <span class="n">toHash</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"h2c"</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">I2OSP</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">x</span><span class="p">]</span>
+    <span class="n">H</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="sa">b</span><span class="s2">"hc2"</span><span class="p">)</span>
+    <span class="n">H</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">label</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+<span class="c1">#     H.update(I2OSP(i,4))</span>
+    <span class="n">H</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+    <span class="n">H</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">t1</span> <span class="o">=</span> <span class="n">H</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span>
+    <span class="n">t2</span> <span class="o">=</span> <span class="n">OS2IP</span><span class="p">(</span><span class="n">t1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">t2</span> <span class="o">%</span> <span class="n">p</span><span class="p">)</span> <span class="c1"># = y</span>
+    
+<span class="n">valueToBeHashed</span> <span class="o">=</span> <span class="mi">23</span>
+<span class="n">hashCallIndex</span> <span class="o">=</span> <span class="mi">11</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">PRIME</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ORDER</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"HashToBase(I2OSP(</span><span class="si">{}</span><span class="s2">)=</span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">) = </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">valueToBeHashed</span><span class="p">,</span> 
+                                                 <span class="n">I2OSP</span><span class="p">(</span><span class="n">valueToBeHashed</span><span class="p">),</span> 
+                                                 <span class="n">hashCallIndex</span><span class="p">,</span> 
+                                                 <span class="n">HashToBase</span><span class="p">(</span><span class="n">I2OSP</span><span class="p">(</span><span class="n">valueToBeHashed</span><span class="p">),</span> <span class="n">hashCallIndex</span><span class="p">)</span>
+                                                <span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>OCT TEST: I2OSP(23) = b'\x00\x00\x00\x17', and then OS2IP(I2OSP(23)) = 23
+115792089210356248762697446949407573530086143415290314195533631308867097853951
+115792089210356248762697446949407573529996955224135760342422259061068512044369
+HashToBase(I2OSP(23)=b'\x00\x00\x00\x17', 11) = 52666019840208479355183598407159392888009956878866650321053742936543132317912
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="1.2-Simplified-SWU-Method-(5.2.3.)">
+<a class="anchor" href="#1.2-Simplified-SWU-Method-(5.2.3.)" aria-hidden="true"><span class="octicon octicon-link"></span></a>1.2 Simplified SWU Method (5.2.3.)<a class="anchor-link" href="#1.2-Simplified-SWU-Method-(5.2.3.)"> </a>
+</h3>
+<p>As per the <a href="https://tools.ietf.org/html/draft-irtf-cfrg-hash-to-curve-02#section-5.2.3">hashing into elliptic curves paper</a>, for P-256 curve, we should use Simple SWU.</p>
+
+<pre><code>The following map2curve_simple_swu(alpha) implements the simplified
+Shallue-Woestijne-Ulas algorithm from [SimpleSWU].  This algorithm
+works for any curve over F_{p^n}, where p = 3 mod 4, including:
+
+o  P256
+
+o  ...</code></pre>
+<p>Given curve equation $g(x) = x^3 + Ax + B$, this algorithm works as follows:</p>
+<ol>
+<li>t = <code>HashToBase(\alpha)</code>
+</li>
+<li>$\alpha = \frac{-b}{a} * (1+\frac{1}{t^4 + t^2})$</li>
+<li>$\beta = -t^2 * \alpha$</li>
+<li>If $g(\alpha)$ is square, output $(\alpha, \sqrt{g(\alpha)})$</li>
+<li>Output $(\beta, \sqrt{g(\beta)})$</li>
+</ol>
+<p>The following procedure implements this algorithm.  It outputs a point with affine coordinates.  It requires knowledge of A and B, the constants from the curve Weierstrass form.</p>
+
+<pre><code>map2curve_simple_swu(alpha)
+
+   Input:
+
+     alpha - value to be encoded, an octet string
+
+   Output:
+
+     (x, y) - a point in E
+
+   Steps:
+
+   1.     t = HashToBase(alpha)
+   2. alpha = t^2 (mod p)
+   3. alpha = alpha * -1 (mod p)
+   4. right = alpha^2 + alpha (mod p)
+   5. right = right^(-1) (mod p)
+   6. right = right + 1 (mod p)
+   7.  left = B * -1 (mod p)
+   8.  left = left / A (mod p)
+   9.    x2 = left * right (mod p)
+   10.   x3 = alpha * x2 (mod p)
+   11.   h2 = x2 ^ 3 (mod p)
+   12.   i2 = x2 * A (mod p)
+   13.   i2 = i2 + B (mod p)
+   14.   h2 = h2 + i2 (mod p)
+   15.   h3 = x3 ^ 3 (mod p)
+   16.   i3 = x3 * A (mod p)
+   17.   i3 = i3 + B (mod p)
+   18.   h3 = h3 + i3 (mod p)
+   19.   y1 = h2 ^ ((p + 1) / 4) (mod p)
+   20.   y2 = h3 ^ ((p + 1) / 4) (mod p)
+   21.    e = CTEQ(y1 ^ 2, h2)   // Constant-time equality
+   22.    x = CMOV(x2, x3, e)    // If e = 1, choose x2, else choose x3
+   23.    y = CMOV(y1, y2, e)    // If e = 1, choose y1, else choose y2
+   24. Output (x, y)</code></pre>
+<h3 id="Helper-functions">
+<a class="anchor" href="#Helper-functions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Helper functions<a class="anchor-link" href="#Helper-functions"> </a>
+</h3>
+<pre><code>o  CMOV(a, b, c): If c = 1, return a, else return b.
+
+  Common software implementations of constant-time selects assume c
+  = 1 or c = 0.  CMOV may be implemented by computing the desired
+  selector (0 or 1) by ORing all bits of c together.  The end result
+  will be either 0 if all bits of c are zero, or 1 if at least one
+  bit of c is 1.
+
+o  CTEQ(a, b): Returns a == b.  Inputs a and b must be the same
+  length (as bytestrings) and the comparison must be implemented in
+  constant time.</code></pre>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"CHECK: ensure p = </span><span class="si">{}</span><span class="s2"> = 3 mod 4, </span><span class="si">{}</span><span class="s2">mod4 = 3mod4: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">PRIME</span><span class="p">,</span> <span class="n">PRIME</span><span class="o">%</span><span class="k">4</span>, PRIME%4==3))
+
+<span class="c1"># https://tools.ietf.org/html/draft-irtf-cfrg-hash-to-curve-02#section-5.2.3</span>
+<span class="c1"># Implementation of H' which maps from bytearray -&gt; g \in G</span>
+<span class="k">def</span> <span class="nf">map2curve_simple_swu</span><span class="p">(</span><span class="n">alpha</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="sd">'''Maps the octet bytearray alpha into the elliptic curve, and returns a</span>
+<span class="sd">       point from the elliptic curve.</span>
+<span class="sd">    '''</span>
+    <span class="n">t</span> <span class="o">=</span>  <span class="n">HashToBase</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">PRIME</span><span class="p">)</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="o">-</span><span class="n">alpha</span> <span class="o">%</span> <span class="n">PRIME</span>
+    <span class="n">right</span> <span class="o">=</span> <span class="p">(</span><span class="nb">pow</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">PRIME</span><span class="p">)</span> <span class="o">+</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">%</span> <span class="n">PRIME</span>
+    <span class="n">right</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="n">PRIME</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">PRIME</span><span class="p">)</span> <span class="c1"># right^(-1) % PRIME    </span>
+    <span class="n">right</span> <span class="o">=</span> <span class="p">(</span><span class="n">right</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>  <span class="o">%</span> <span class="n">PRIME</span>
+    <span class="n">left</span> <span class="o">=</span> <span class="o">-</span><span class="n">B</span> <span class="o">%</span> <span class="n">PRIME</span>
+    <span class="n">left</span> <span class="o">=</span>  <span class="p">(</span><span class="n">left</span> <span class="o">*</span> <span class="nb">pow</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">PRIME</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">PRIME</span><span class="p">))</span> <span class="o">%</span> <span class="n">PRIME</span> <span class="c1"># (left * A^-1) % PRIME</span>
+    <span class="n">x2</span> <span class="o">=</span> <span class="p">(</span><span class="n">left</span> <span class="o">*</span> <span class="n">right</span><span class="p">)</span> <span class="o">%</span> <span class="n">PRIME</span>
+    <span class="n">x3</span> <span class="o">=</span> <span class="p">(</span><span class="n">alpha</span> <span class="o">*</span> <span class="n">x2</span><span class="p">)</span>  <span class="o">%</span> <span class="n">PRIME</span>
+    <span class="n">h2</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">PRIME</span><span class="p">)</span> <span class="c1"># x2 ^ 3  % PRIME</span>
+    <span class="n">i2</span> <span class="o">=</span> <span class="p">(</span><span class="n">x2</span> <span class="o">*</span> <span class="n">A</span><span class="p">)</span>  <span class="o">%</span> <span class="n">PRIME</span>
+    <span class="n">i2</span> <span class="o">=</span> <span class="p">(</span><span class="n">i2</span> <span class="o">+</span> <span class="n">B</span><span class="p">)</span> <span class="o">%</span> <span class="n">PRIME</span>
+    <span class="n">h2</span> <span class="o">=</span> <span class="p">(</span><span class="n">h2</span> <span class="o">+</span> <span class="n">i2</span><span class="p">)</span>  <span class="o">%</span> <span class="n">PRIME</span>
+    <span class="n">h3</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">x3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">PRIME</span><span class="p">)</span> <span class="c1"># x3 ^ 3  % PRIME</span>
+    <span class="n">i3</span> <span class="o">=</span> <span class="p">(</span><span class="n">x3</span> <span class="o">*</span> <span class="n">A</span><span class="p">)</span>  <span class="o">%</span> <span class="n">PRIME</span>
+    <span class="n">i3</span> <span class="o">=</span> <span class="p">(</span><span class="n">i3</span> <span class="o">+</span> <span class="n">B</span><span class="p">)</span>  <span class="o">%</span> <span class="n">PRIME</span>
+    <span class="n">h3</span> <span class="o">=</span> <span class="p">(</span><span class="n">h3</span> <span class="o">+</span> <span class="n">i3</span><span class="p">)</span>  <span class="o">%</span> <span class="n">PRIME</span>
+    <span class="n">y1</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">h2</span><span class="p">,</span> <span class="p">(</span><span class="n">PRIME</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">4</span><span class="p">,</span> <span class="n">PRIME</span><span class="p">)</span> <span class="c1"># h2 ^ ((p + 1) / 4)  % PRIME</span>
+    <span class="n">y2</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">h3</span><span class="p">,</span> <span class="p">(</span><span class="n">PRIME</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">4</span><span class="p">,</span> <span class="n">PRIME</span><span class="p">)</span> <span class="c1"># h3 ^ ((p + 1) / 4)  % PRIME</span>
+    <span class="k">if</span> <span class="nb">pow</span><span class="p">(</span><span class="n">y1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">PRIME</span><span class="p">)</span> <span class="o">==</span> <span class="n">h2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ecc</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">curve_256</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ecc</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">curve_256</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">y2</span><span class="p">)</span>
+
+<span class="c1"># Implemented via the Simple SWU paper: https://eprint.iacr.org/2009/340.pdf</span>
+<span class="c1"># 1. alpha = -t^2</span>
+<span class="c1"># 2. X2 = -B/A * (1 + 1/(alpha^2 + alpha))</span>
+<span class="c1"># 3. X3 = alpha*X2</span>
+<span class="c1"># 4. h2 = g(X2), h3 = g(x3), if g(x) = x^3 + Ax + B</span>
+<span class="c1"># 5. if h2 is square, return (X2, sqrt(g(X2))), else return (X3, sqrt(g(X3)))</span>
+<span class="k">def</span> <span class="nf">my_swu</span><span class="p">(</span><span class="n">alpha</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">,</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="c1"># 1. alpha = -t^2</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">HashToBase</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"0. HashToBase(alpha)= </span><span class="se">\t\t\t</span><span class="s2">"</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="k">if</span> <span class="n">debug</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="nb">pow</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">PRIME</span><span class="p">))</span> <span class="o">%</span> <span class="n">PRIME</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"1. alpha=-t^2= </span><span class="se">\t\t\t\t</span><span class="s2">"</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span> <span class="k">if</span> <span class="n">debug</span> <span class="k">else</span> <span class="kc">None</span>
+    
+    <span class="c1">#X2 = -B/A * (1 + 1/(alpha^2 + alpha))</span>
+    <span class="n">X2_left</span> <span class="o">=</span> <span class="o">-</span><span class="n">B</span> <span class="o">%</span> <span class="n">PRIME</span>
+    <span class="n">X2_left</span> <span class="o">=</span> <span class="p">(</span><span class="n">X2_left</span> <span class="o">*</span> <span class="nb">pow</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">PRIME</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">PRIME</span><span class="p">))</span> <span class="o">%</span> <span class="n">PRIME</span>
+    <span class="c1"># X2_left = 52283484311836130297341192243151613979733528143761346583456295874302188418414</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"2.1 X2_left=-B/A= </span><span class="se">\t\t\t</span><span class="s2">"</span><span class="p">,</span> <span class="n">X2_left</span><span class="p">)</span> <span class="k">if</span> <span class="n">debug</span> <span class="k">else</span> <span class="kc">None</span>
+    
+    <span class="n">X2_right</span> <span class="o">=</span> <span class="p">(</span><span class="n">alpha</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">PRIME</span>
+    <span class="n">X2_right</span> <span class="o">=</span> <span class="p">(</span><span class="n">X2_right</span><span class="o">*</span><span class="n">alpha</span><span class="p">)</span> <span class="o">%</span> <span class="n">PRIME</span>
+    <span class="n">X2_right</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">X2_right</span><span class="p">,</span> <span class="n">PRIME</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">PRIME</span><span class="p">)</span>
+    <span class="n">X2_right</span> <span class="o">=</span> <span class="p">(</span><span class="n">X2_right</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">PRIME</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"2.2 X2_right=1+1/(alpha^2+alpha)= </span><span class="se">\t</span><span class="s2">"</span><span class="p">,</span> <span class="n">X2_right</span><span class="p">)</span> <span class="k">if</span> <span class="n">debug</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">X2</span> <span class="o">=</span> <span class="p">(</span><span class="n">X2_left</span> <span class="o">*</span> <span class="n">X2_right</span><span class="p">)</span> <span class="o">%</span> <span class="n">PRIME</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"2.3 X2= </span><span class="se">\t\t\t\t</span><span class="s2">"</span><span class="p">,</span> <span class="n">X2</span><span class="p">)</span> <span class="k">if</span> <span class="n">debug</span> <span class="k">else</span> <span class="kc">None</span>
+    
+    <span class="c1"># X3 = alpha*X2</span>
+    <span class="n">X3</span> <span class="o">=</span> <span class="p">(</span><span class="n">alpha</span><span class="o">*</span><span class="n">X2</span><span class="p">)</span> <span class="o">%</span> <span class="n">PRIME</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"3. X3=alpha*X2= </span><span class="se">\t\t\t</span><span class="s2">"</span><span class="p">,</span> <span class="n">X3</span><span class="p">)</span> <span class="k">if</span> <span class="n">debug</span> <span class="k">else</span> <span class="kc">None</span>
+    
+    <span class="c1"># h2 = g(X2), h3 = g(x3), if g(x) = x^3 + Ax + B</span>
+    <span class="n">h2</span> <span class="o">=</span> <span class="p">(</span><span class="nb">pow</span><span class="p">(</span><span class="n">X2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">PRIME</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">A</span> <span class="o">*</span> <span class="n">X2</span><span class="p">)</span><span class="o">%</span><span class="k">PRIME</span> + B) % PRIME
+    <span class="n">h3</span> <span class="o">=</span> <span class="p">(</span><span class="nb">pow</span><span class="p">(</span><span class="n">X3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">PRIME</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">A</span> <span class="o">*</span> <span class="n">X3</span><span class="p">)</span><span class="o">%</span><span class="k">PRIME</span> + B) % PRIME
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"4.1 g(X2)= </span><span class="se">\t\t\t\t</span><span class="s2">"</span><span class="p">,</span> <span class="n">h2</span><span class="p">)</span> <span class="k">if</span> <span class="n">debug</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"4.2 g(X3)= </span><span class="se">\t\t\t\t</span><span class="s2">"</span><span class="p">,</span> <span class="n">h3</span><span class="p">)</span> <span class="k">if</span> <span class="n">debug</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">sh2</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">h2</span><span class="p">,</span> <span class="p">(</span><span class="n">PRIME</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">//</span><span class="mi">4</span><span class="p">,</span> <span class="n">PRIME</span><span class="p">)</span>
+    <span class="n">sh3</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">h3</span><span class="p">,</span> <span class="p">(</span><span class="n">PRIME</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">//</span><span class="mi">4</span><span class="p">,</span> <span class="n">PRIME</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"5.1 sqrt(g(X2))= </span><span class="se">\t\t\t</span><span class="s2">"</span><span class="p">,</span> <span class="n">sh2</span><span class="p">)</span> <span class="k">if</span> <span class="n">debug</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"5.2 sqrt(g(X3))= </span><span class="se">\t\t\t</span><span class="s2">"</span><span class="p">,</span> <span class="n">sh3</span><span class="p">)</span> <span class="k">if</span> <span class="n">debug</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="nb">pow</span><span class="p">(</span><span class="n">sh2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">PRIME</span><span class="p">)</span> <span class="o">==</span> <span class="n">h2</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"X2, sh2^2 = h2"</span><span class="p">)</span> <span class="k">if</span> <span class="n">debug</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">ecc</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">curve_256</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">sh2</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"X3, sh3^2 = h3? </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">pow</span><span class="p">(</span><span class="n">sh3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">PRIME</span><span class="p">)</span> <span class="o">==</span> <span class="n">h3</span><span class="p">))</span> <span class="k">if</span> <span class="n">debug</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">ecc</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">curve_256</span><span class="p">,</span> <span class="n">X3</span><span class="p">,</span> <span class="n">sh3</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>CHECK: ensure p = 115792089210356248762697446949407573530086143415290314195533631308867097853951 = 3 mod 4, 3mod4 = 3mod4: True
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="1.2.1-Testing-Correctness">
+<a class="anchor" href="#1.2.1-Testing-Correctness" aria-hidden="true"><span class="octicon octicon-link"></span></a>1.2.1 Testing Correctness<a class="anchor-link" href="#1.2.1-Testing-Correctness"> </a>
+</h2>
+<p>Testing the SWU's implementation vs HashToBase's implementation, and showing it can successfully hash into the curve with all inputs <code>range(0, test_cases)</code></p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_cases</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">correct</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">correct_list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">test_cases</span><span class="p">):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">map2curve_simple_swu</span><span class="p">(</span><span class="n">I2OSP</span><span class="p">(</span><span class="n">test</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">curve_256</span><span class="o">.</span><span class="n">contains_point</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">x</span><span class="p">(),</span> <span class="n">p</span><span class="o">.</span><span class="n">y</span><span class="p">()):</span>
+        <span class="n">correct</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">correct_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
+    
+<span class="nb">print</span><span class="p">(</span><span class="s2">"correct: </span><span class="si">{}</span><span class="s2">, are </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">correct</span><span class="p">,</span> <span class="n">correct_list</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>correct: 30, are [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_cases</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">correct</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">correct_list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">test_cases</span><span class="p">):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">my_swu</span><span class="p">(</span><span class="n">I2OSP</span><span class="p">(</span><span class="n">test</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">curve_256</span><span class="o">.</span><span class="n">contains_point</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">x</span><span class="p">(),</span> <span class="n">p</span><span class="o">.</span><span class="n">y</span><span class="p">()):</span>
+        <span class="n">correct</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">correct_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
+    
+<span class="nb">print</span><span class="p">(</span><span class="s2">"correct: </span><span class="si">{}</span><span class="s2">, are </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">correct</span><span class="p">,</span> <span class="n">correct_list</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>correct: 30, are [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="1.3-Usage-of-SWU">
+<a class="anchor" href="#1.3-Usage-of-SWU" aria-hidden="true"><span class="octicon octicon-link"></span></a>1.3 Usage of SWU<a class="anchor-link" href="#1.3-Usage-of-SWU"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">map2curve_simple_swu</span><span class="p">(</span><span class="sa">b</span><span class="s2">"passwordwww.facebook.com"</span><span class="p">))</span>
+
+<span class="c1"># or you can use the og swu implementation</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">my_swu</span><span class="p">(</span><span class="sa">b</span><span class="s2">"passwordwww.facebook.com"</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(50560896577634328033374378148020771698070026914100043083631439008968958738601,96434689098651036750287593872426977420942250920898794682863763170885260996734)
+(50560896577634328033374378148020771698070026914100043083631439008968958738601,96434689098651036750287593872426977420942250920898794682863763170885260996734)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="2-SPHINX-architecture">
+<a class="anchor" href="#2-SPHINX-architecture" aria-hidden="true"><span class="octicon octicon-link"></span></a>2 SPHINX architecture<a class="anchor-link" href="#2-SPHINX-architecture"> </a>
+</h1>
+<h2 id="steps-to-reproduce">
+<a class="anchor" href="#steps-to-reproduce" aria-hidden="true"><span class="octicon octicon-link"></span></a>steps to reproduce<a class="anchor-link" href="#steps-to-reproduce"> </a>
+</h2>
+<p>Notes:</p>
+<ul>
+<li>x is a byte array</li>
+<li>$g \in G$</li>
+</ul>
+<ol>
+<li>client(x: bytearray) -&gt; Point:<ul>
+<li>takes $x=masterpassword || domainname$</li>
+<li>calculates $H'(x)$: bytearray -&gt; $P(x,y) \in G$</li>
+<li>picks a random number $\rho$</li>
+<li>calculates and returns the blinded result $\alpha = H'(x)^\rho$</li>
+</ul>
+</li>
+<li>device($\alpha$: Point) -&gt; Point:<ul>
+<li>checks if $\alpha$ is in group $G$</li>
+<li>retrieves (or creates and store) $d$ in database</li>
+<li>calculates and returns $\beta = \alpha^d$</li>
+</ul>
+</li>
+<li>client(\beta: Point) -&gt; bytearray:<ul>
+<li>checks if $\beta$ is in group $G$</li>
+<li>calculates $\beta^\frac{1}{\rho}$ and unblinds the result</li>
+<li>calculates and returns H(x || \beta^(1/\rho))</li>
+</ul>
+</li>
+</ol>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="s2">"masterpasswordwww.google.com"</span>
+<span class="n">hdashx</span> <span class="o">=</span> <span class="n">map2curve_simple_swu</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"H'(x):"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">hdashx</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">hex</span><span class="p">(</span><span class="n">hdashx</span><span class="o">.</span><span class="n">x</span><span class="p">()),</span> <span class="nb">hex</span><span class="p">(</span><span class="n">hdashx</span><span class="o">.</span><span class="n">y</span><span class="p">()))</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="mi">23</span> <span class="c1"># generate a random number here</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="n">hdashx</span> <span class="o">*</span> <span class="n">rho</span> <span class="c1"># hdashx^rho</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"alpha = (H'(x))^rho:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">hex</span><span class="p">(</span><span class="n">alpha</span><span class="o">.</span><span class="n">x</span><span class="p">()),</span> <span class="nb">hex</span><span class="p">(</span><span class="n">alpha</span><span class="o">.</span><span class="n">y</span><span class="p">()))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>H'(x):
+(9647045120380072016896367801436216089517385294113691900224368540592147852881,63780912247584663447060568763839704993950614958143814955131411688625580648907)
+0x155408b6f6f87082d9d97dbb4d9322e279709ae7e591ec2a2cd02db7e548ee51 0x8d02b7900d4d11105589f57d5c2b8a871f372b26a0c1464b884671c6dad9a9cb
+alpha = (H'(x))^rho:
+(96060363318793445308142303247957725785598212468546760216643989368154363422182,67253679145713470788686215502821137612357123005677477254415963606436937150077)
+0xd4603d2897e719a966dd41810e0d547f8e5141bb24b02792af8a4f0b401665e6 0x94b03bc36fb71a95dc6c50198870a85f7f0d52e0f0fb5ee0fdd41d09f3c72e7d
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="p">(</span><span class="n">curve_256</span><span class="o">.</span><span class="n">contains_point</span><span class="p">(</span><span class="n">alpha</span><span class="o">.</span><span class="n">x</span><span class="p">(),</span> <span class="n">alpha</span><span class="o">.</span><span class="n">y</span><span class="p">())</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">HashToBase</span><span class="p">(</span><span class="sa">b</span><span class="s2">"some random way to produce this d key"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"d = "</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">hex</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+<span class="n">beta</span> <span class="o">=</span> <span class="n">d</span> <span class="o">*</span> <span class="n">alpha</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"beta = alpha^d:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">beta</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">hex</span><span class="p">(</span><span class="n">beta</span><span class="o">.</span><span class="n">x</span><span class="p">()),</span> <span class="nb">hex</span><span class="p">(</span><span class="n">beta</span><span class="o">.</span><span class="n">y</span><span class="p">()))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>d =  49593046683349734658837698885206452611033450058247891428920244266019060051104
+0x6da4ab71e4602e1eb332ad0143eddb1ba07bd258ed2716a4f9271821e6a5eca0
+beta = alpha^d:
+(20902386769593356422803755726142762975644522947047497806519940156789227647566,37820471632289113646378000102094571407461625006655530832469911478145755153402)
+0x2e3654e7b2bf3d4ff2ad21cdfc9f73670a42bf5a807e799e726ebd048f91f24e 0x539da0dc00fcea9ef0d42ec0fca00aafad897c01e1ba5cf901992ac4f67883fa
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="p">(</span><span class="n">curve_256</span><span class="o">.</span><span class="n">contains_point</span><span class="p">(</span><span class="n">beta</span><span class="o">.</span><span class="n">x</span><span class="p">(),</span> <span class="n">beta</span><span class="o">.</span><span class="n">y</span><span class="p">())</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span>
+<span class="c1"># n.b.</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"rho^-1 * rho = "</span><span class="p">,</span><span class="nb">pow</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">PRIME</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">PRIME</span><span class="p">)</span> <span class="o">*</span> <span class="n">rho</span> <span class="o">%</span> <span class="n">PRIME</span><span class="p">)</span>
+<span class="n">final</span> <span class="o">=</span> <span class="n">beta</span> <span class="o">*</span> <span class="nb">pow</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">ORDER</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">ORDER</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"final = beta^(1/rho)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">final</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">hex</span><span class="p">(</span><span class="n">final</span><span class="o">.</span><span class="n">x</span><span class="p">()),</span> <span class="nb">hex</span><span class="p">(</span><span class="n">final</span><span class="o">.</span><span class="n">y</span><span class="p">()))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>rho^-1 * rho =  1
+final = beta^(1/rho)
+(34550786935032766327755133052490331274309469427745266322787923543983364811861,49690625575606612910815333321718443879931197308857771898142620989441619363396)
+0x4c630d6a1aea8b7ff03f4c9996dd21f978f9609eb387b3bb7b73b20ce694ac55 0x6ddbe5bc2a5b6a1514a6b6b7a1340ce4debe089a530c5b5cee2ba720b6b58644
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">check_final</span> <span class="o">=</span> <span class="n">hdashx</span> <span class="o">*</span> <span class="n">d</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">check_final</span><span class="p">)</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">curve_256</span><span class="o">.</span><span class="n">contains_point</span><span class="p">(</span><span class="n">check_final</span><span class="o">.</span><span class="n">x</span><span class="p">(),</span> <span class="n">check_final</span><span class="o">.</span><span class="n">y</span><span class="p">())</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Check that this result `check final` equals `final`:"</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">check_final</span> <span class="o">==</span> <span class="n">final</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(34550786935032766327755133052490331274309469427745266322787923543983364811861,49690625575606612910815333321718443879931197308857771898142620989441619363396)
+Check that this result `check final` equals `final`:
+True
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Oblivious Psuedo-Random Function</span>
+<span class="k">def</span> <span class="nf">OPRF</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">point</span><span class="p">:</span> <span class="n">ecc</span><span class="o">.</span><span class="n">Point</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytearray</span><span class="p">:</span>
+    <span class="sd">'''Performs the actual Hash H of H(x, (H'(X))^d), which is the hash of a</span>
+<span class="sd">       bytearray x and a Point on the curve. Returns a bytearray result.</span>
+<span class="sd">    '''</span>
+    <span class="n">H</span> <span class="o">=</span> <span class="n">sha256</span><span class="p">()</span>
+    <span class="n">H</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+    <span class="n">H</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">I2OSP</span><span class="p">(</span><span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="p">(),</span> <span class="mi">256</span><span class="p">))</span>
+    <span class="n">H</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">I2OSP</span><span class="p">(</span><span class="n">point</span><span class="o">.</span><span class="n">y</span><span class="p">(),</span> <span class="mi">256</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">H</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span>
+
+<span class="n">rwdbytes</span> <span class="o">=</span> <span class="n">OPRF</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">final</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rwdbytes</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">rwdbytes</span><span class="p">))</span>
+
+<span class="c1"># convert this to a password</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="k">def</span> <span class="nf">gen_password</span><span class="p">(</span><span class="n">rwd</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">charset</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s2">"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&amp;*()"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">'''Generates the password based on the result of the OPRF function</span>
+<span class="sd">    '''</span>
+    <span class="n">len_charset</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">charset</span><span class="p">)</span>
+    <span class="n">indices</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">len_charset</span> <span class="o">*</span> <span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="n">byte</span><span class="p">))</span> <span class="o">/</span> <span class="mf">256.0</span><span class="p">))</span> <span class="k">for</span> <span class="n">byte</span> <span class="ow">in</span> <span class="n">rwd</span><span class="p">]</span>
+    <span class="k">return</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">charset</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Your facebook password is: "</span><span class="p">,</span> <span class="n">gen_password</span><span class="p">(</span><span class="n">rwdbytes</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>b"\xec\xf8J\xf9\xd7\xe6\xa9e\xa5h\x1duj\x16\x91''\xd4\xe4\x89\x1c\xc9\xef\xfeo}\x17\xb7\x10\x8d.$" 32
+Your facebook password is:  %*U(8#vcudIgdGoKK7#mH4^)fjGzEnMK
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="2.1-Overview">
+<a class="anchor" href="#2.1-Overview" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.1 Overview<a class="anchor-link" href="#2.1-Overview"> </a>
+</h2>
+<p>Here is all the basic functionality of the each part captured as a function.</p>
+<p>They follow the naming convension "AToB", where A is the current Entity (Client, Device), as shown below.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="s2">"masterpasswordwww.google.com"</span>
+
+<span class="c1"># Client 1</span>
+<span class="k">def</span> <span class="nf">clientToPoint</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ecc</span><span class="o">.</span><span class="n">Point</span><span class="p">:</span>
+    <span class="sd">'''input the master password pwd and returns a point on the curve alpha</span>
+<span class="sd">       with the random integer that was used to blind it.</span>
+<span class="sd">    '''</span>
+    <span class="n">hdashx</span> <span class="o">=</span> <span class="n">map2curve_simple_swu</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+    <span class="n">rho</span> <span class="o">=</span> <span class="n">OS2IP</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">urandom</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">hdashx</span> <span class="o">*</span> <span class="n">rho</span> <span class="c1"># alpha = hdashx^rho</span>
+
+<span class="c1"># Device</span>
+<span class="k">def</span> <span class="nf">deviceToClient</span><span class="p">(</span><span class="n">alpha</span><span class="p">:</span> <span class="n">ecc</span><span class="o">.</span><span class="n">Point</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ecc</span><span class="o">.</span><span class="n">Point</span><span class="p">:</span>
+    <span class="sd">'''input the point on the curve. If it is in the Group, we store</span>
+<span class="sd">       a random key D that corresponds to this point, and return the point</span>
+<span class="sd">       exponeniated to D.</span>
+<span class="sd">    '''</span>
+    <span class="k">if</span> <span class="n">curve_256</span><span class="o">.</span><span class="n">contains_point</span><span class="p">(</span><span class="n">alpha</span><span class="o">.</span><span class="n">x</span><span class="p">(),</span> <span class="n">alpha</span><span class="o">.</span><span class="n">y</span><span class="p">())</span> <span class="o">!=</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"ALPHAS: "</span><span class="p">,</span> <span class="nb">hex</span><span class="p">(</span><span class="n">alpha</span><span class="o">.</span><span class="n">x</span><span class="p">()),</span> <span class="nb">hex</span><span class="p">(</span><span class="n">alpha</span><span class="o">.</span><span class="n">y</span><span class="p">()))</span>
+    <span class="n">randomBytes</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">urandom</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">HashToBase</span><span class="p">(</span><span class="n">randomBytes</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"DEVICE: I am going to store d: "</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">d</span> <span class="o">*</span> <span class="n">alpha</span> <span class="c1"># beta = alpha^d</span>
+
+<span class="c1">#Client 2</span>
+<span class="k">def</span> <span class="nf">clientToPassword</span><span class="p">(</span><span class="n">beta</span><span class="p">:</span> <span class="n">ecc</span><span class="o">.</span><span class="n">Point</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">'''input the point on the curve. If it is in the Group, we compute</span>
+<span class="sd">       this point exponeniated to the inverse of rho, and then we use the</span>
+<span class="sd">       OPRF to create the byte array which generates the final password rwd</span>
+<span class="sd">    '''</span>
+    <span class="k">if</span> <span class="n">curve_256</span><span class="o">.</span><span class="n">contains_point</span><span class="p">(</span><span class="n">beta</span><span class="o">.</span><span class="n">x</span><span class="p">(),</span> <span class="n">beta</span><span class="o">.</span><span class="n">y</span><span class="p">())</span> <span class="o">!=</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="n">final</span> <span class="o">=</span> <span class="n">beta</span> <span class="o">*</span> <span class="nb">pow</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">ORDER</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">ORDER</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"FINAL: "</span><span class="p">,</span> <span class="nb">hex</span><span class="p">(</span><span class="n">final</span><span class="o">.</span><span class="n">x</span><span class="p">()),</span> <span class="nb">hex</span><span class="p">(</span><span class="n">final</span><span class="o">.</span><span class="n">y</span><span class="p">()))</span>
+    <span class="n">rwdbytes</span> <span class="o">=</span> <span class="n">OPRF</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">final</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">gen_password</span><span class="p">(</span><span class="n">rwdbytes</span><span class="p">,</span> <span class="n">charset</span><span class="o">=</span><span class="s2">"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&amp;*()"</span><span class="p">)</span>
+
+<span class="c1"># Usage</span>
+<span class="c1"># --------- Start Client --------- </span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="n">clientToPoint</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="c1"># ---------  End Client  ---------</span>
+
+<span class="c1"># send alpha to Device</span>
+
+<span class="c1"># --------- Start Device ---------</span>
+<span class="n">beta</span> <span class="o">=</span> <span class="n">deviceToClient</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+<span class="c1"># ---------  End Device  ---------</span>
+
+<span class="c1"># send beta to Client</span>
+
+<span class="c1"># --------- Start Client ---------</span>
+<span class="n">rwd</span> <span class="o">=</span> <span class="n">clientToPassword</span><span class="p">(</span><span class="n">beta</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"CLIENT: my password is"</span><span class="p">,</span> <span class="n">rwd</span><span class="p">)</span>
+<span class="c1"># ---------  End Client  ---------</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>ALPHAS:  0x6d68db7cb3dc8e41218e21c99686a1c4b15f4b28b042c20e9cf1a5ec4269f77a 0x6caf2ff7e2661f15eabc9b92dac5c99847ee9af38eade284e2fe4dcdc41246cf
+DEVICE: I am going to store d:  39293753817579684587358563962791485292162063136866083282799165565461415876781
+FINAL:  0x7e5b03b2c70b79dbf3ebee465c1af0dacf48abb1659a26251cf90c9324da7d43 0x7ef85457e3fa4289a7b49cd37d6ca2b285fd51ad68433a70598cad63033cb52b
+CLIENT: my password is 5tce4XdQQHobplMPqhfUIwtR%RbOnlAw
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="2.2-Issues-I-ran-Into-during-Implementation">
+<a class="anchor" href="#2.2-Issues-I-ran-Into-during-Implementation" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.2 Issues I ran Into during Implementation<a class="anchor-link" href="#2.2-Issues-I-ran-Into-during-Implementation"> </a>
+</h2>
+<p>Here is a collection of issues I've ran into over the past week about my implementation experience, having basically no experience in cryptography and trying to play around with elliptic curves.</p>
+<ul>
+<li>Implementing Octet String &lt;-&gt; Integer Primitives<ul>
+<li>In order to implement HashToBase, I had to first implement these primitive functions. I looked at the papers but had trouble figuring out what I had to implement, and the implementation presented in the second paper was not very helpful in terms of how to actually implement it.<ul>
+<li>it said stuff like, "convert x to it's base 256 form such that x = x_{i-1} <em> 256^{i-1} + ... + x_1 </em> 256 + x_0"</li>
+</ul>
+</li>
+<li>I was wondering, Do I need to actually calculate this value, when I've read online that this is literally the byte representation of an integer (in python its called <code>bytearray</code>!)</li>
+<li>Mixed up octet with octal, and when was sad when I realised I could not use the python built-in <code>oct()</code>.</li>
+</ul>
+</li>
+<li>HashToBase<ul>
+<li>I was pretty confused with the notation of the hash function and how it accepted multiple arguments<ul>
+<li>found out during week 4 tutorial and from personal research that you should concatenate it, but be careful of length extension attacks</li>
+<li>many implementations of hash functions (for example, <code>hashlib.sha256</code> in python), implement the hash function in a special way:<ul>
+<li>
+<div class="highlight"><pre><span></span><span class="n">myHash</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">()</span><span class="o">.</span> <span class="c1"># instantiation</span>
+</pre></div>
+</li>
+<li>
+<div class="highlight"><pre><span></span><span class="n">myHash</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="sa">b</span><span class="s1">'This is the byte representation of something I want to hash'</span><span class="p">)</span> <span class="c1"># update</span>
+<span class="n">myHash</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="sa">b</span><span class="s1">' , and you can keep hash multi-part lines like this'</span><span class="p">)</span>
+</pre></div>
+</li>
+<li>
+<div class="highlight"><pre><span></span><span class="n">myHash</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span> <span class="c1"># result of the hash is returned when you run digest</span>
+</pre></div>
+</li>
+<li>I.e. use the update function sequentially to add multiple parts to the hash, this is done for multiple reasons<ul>
+<li>encourage good standards, so people hash multiple arguments through the <code>update()</code> function rather than concatenating the strings before applying the hash</li>
+<li>so that each call to hash runs in constant time, no need to worry about variable-length string hashing</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Simple SWU<ul>
+<li>modular arithmetic is very particular<ul>
+<li>
+<code>A // B</code> is usually how you do integer division, however, this does not work for modular arithmetic. <ul>
+<li>Use <code>A * pow(B, PRIME-2, PRIME)</code>, where <code>B^-1 % PRIME == pow(B, PRIME-2, PRIME)</code> and <code>PRIME mod 4 == 3 mod 4</code> is required.</li>
+</ul>
+</li>
+<li>make sure the entire result is enclosed in brackets before applying <code>%PRIME</code> or else you may only be applying modulo to part of the result</li>
+<li>I was really just stuck on that first point for while, the algorithm was failing to hash 8/30 cases, and I was having a hard time figuring out why until I played around with genius, the cli calculator capable of modular arithmetic.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>SPHINX<ul>
+<li>I could not get the actual math to work, when I exponiated $\beta$ to the inverse of $\rho$, it was not equal to what the OPRF function dictated, when I knew that the paper said that this unblinding process should do so<ul>
+<li>Make sure you know the difference between the prime number p of a Finite Integer Field Z_p, and the ORDER of Z_p. They are different numbers, It should be inverted w.r.t ORDER, not PRIME.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="3.-Further-Work">
+<a class="anchor" href="#3.-Further-Work" aria-hidden="true"><span class="octicon octicon-link"></span></a>3. Further Work<a class="anchor-link" href="#3.-Further-Work"> </a>
+</h2>
+<p>This is basically most of the functionality of SPHINX completed in python. Now It will be time to prove that this concept works by implementing it into a working password store to demonstrate the power. I have a few ideas that also need to be implemented before I can go towards creating the front ends:</p>
+<ul>
+<li>Have a configurable bytes to password generating system, for example, If passwords need to be a certain length or if they only contain certain characters.</li>
+</ul>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="xpire/blog"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/jupyter/security/sphinx/somethingawesome/2021/05/06/sphinx-algorithm-overview.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Justin Or&#39;s personal Blog!</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/xpire" title="xpire"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/just_in_awe" title="just_in_awe"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
