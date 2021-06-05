@@ -1,8 +1,9 @@
 ---
+toc: true
+layout: post
+description: Here is explore some of the cool plugins Gatsy has to offer, which have been used to build this blog
+categories: [gatsby, frontend, javascript]
 title: Gatsby has a lot of cool plugins
-date: 2020-09-01T16:51:00.656796
-description: 'Here is explore some of the cool plugins Gatsy has to offer, which have been used to build this blog'
-tags: ['gatsby', 'frontend', 'javascript']
 ---
 
 You may have realised that the codeblocks on this blog look really nice...
