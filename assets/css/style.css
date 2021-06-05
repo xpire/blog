@@ -429,6 +429,8 @@ html, body, input, textarea, select, button { color: rgba(255, 255, 255, 0.87) !
 
 a { color: #4bbaff !important; }
 
+a.anchor-link { color: black !important; }
+
 a:hover { color: rgba(255, 255, 255, 0.87) !important; }
 
 .site-title, .site-title:visited, .site-nav, .page-link { color: rgba(255, 255, 255, 0.87) !important; }
