@@ -4,6 +4,7 @@ layout: post
 description: Here is explore some of the cool plugins Gatsy has to offer, which have been used to build this blog
 categories: [gatsby, frontend, javascript]
 title: Gatsby has a lot of cool plugins
+comments: true
 ---
 
 You may have realised that the codeblocks on this blog look really nice...

@@ -6,6 +6,7 @@ categories: [markdown]
 title: An Example Markdown Post
 hide: true
 search_exclude: false # hidden but can be seen @ /markdown/2020/01/14/test-markdown-post.html
+comments: true
 ---
 
 # Example Markdown Post

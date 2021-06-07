@@ -4,6 +4,7 @@ layout: post
 description: How I configured blogs and project pages written in markdown to show on their respective pages
 categories: [gatsby]
 title: Multiple blog types in Gatsby
+comments: true
 ---
 
 `graphql` is was very confusing for me to use at first, but with the `___graphql` tool available during `gatsby develop`, I found that I could quickly learn how it works as I used it more and more. One of the issues I came across lately was trying to maintain two different markdown folders for blogs and projects respectively.
