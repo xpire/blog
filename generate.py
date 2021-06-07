@@ -12,6 +12,7 @@ parser.add_argument("title", help="the title of your blog post", type=str)
 parser.add_argument("desc", help="the description of your blog post", type=str)
 parser.add_argument("--categories", "-c", nargs="+", help="a space delimited list of categories for this post")
 parser.add_argument("--hide", default=False, type=bool, help="hide this page from search and display")
+parser.add_argument("--comments", default=True, type=bool, help="enable / disable comments")
 args = parser.parse_args()
 
 # usage: python3 generate.py jupyter "COMP6771 Week 1 Notes" "Introduction to C++ and setting up details" -c comp6711 week01
@@ -41,6 +42,9 @@ contents = ["toc: true","layout: post",f"description: {args.desc}", f"categories
 
 if args.hide:
     contents += ["hide: true", "search_exclude: false"]
+    
+if args.comments:
+    contents.append("comments: true")
 
 with open(f"{root}/{folder}/{filename}", "x") as f:
     if args.type == "markdown":
