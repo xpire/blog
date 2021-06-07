@@ -4,6 +4,7 @@ layout: post
 description: Something seemingly simple to implement becomes the most annoying thing to implement ever.
 categories: [frontend, gatsby]
 title: The Quest for a cool header design
+comments: true
 ---
 
 When I first came up with the idea to highlight the current page with a rounded box, it sounded really easy to implement. I even decided to go really simple and make it just invert the background. So in `light` mode, it would be a black box which had white text insde, and the opposite for dark mode. What could go wrong?
