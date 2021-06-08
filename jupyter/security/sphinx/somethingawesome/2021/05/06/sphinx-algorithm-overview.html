@@ -889,7 +889,7 @@ o  CTEQ(a, b): Returns a == b.  Inputs a and b must be the same
 </ul>
 <ol>
 <li>client(x: bytearray) -&gt; Point:<ul>
-<li>takes $x=masterpassword || domainname$</li>
+<li>takes $x=masterpassword ~||~ domainname$</li>
 <li>calculates $H'(x)$: bytearray -&gt; $P(x,y) \in G$</li>
 <li>picks a random number $\rho$</li>
 <li>calculates and returns the blinded result $\alpha = H'(x)^\rho$</li>
