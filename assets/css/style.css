@@ -463,6 +463,8 @@ canvas { filter: invert(100%); }
 
 li .post-meta-description { color: rgba(255, 255, 255, 0.69) !important; }
 
+.search-results-list-item .search-result-title { color: rgba(255, 255, 255, 0.87); }
+
 .search-result-rel-url { color: #7b5e7b; }
 
 .search-results-list-item a { color: #cbc5ea; }
