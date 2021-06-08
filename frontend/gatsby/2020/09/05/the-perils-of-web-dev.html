@@ -111,8 +111,9 @@ window.onload = wrap_img;
 
     </header>
 
-  <div class="post-content e-content" itemprop="articleBody">
-    <ul class="section-nav">
+  <div class="main">
+    <nav class="post-nav post-content">
+      <ul class="section-nav">
 <li class="toc-entry toc-h1"><a href="#inverting-colors">Inverting Colors</a>
 <ul>
 <li class="toc-entry toc-h2"><a href="#try-1-backdrop-filter">Try 1: backdrop-filter</a></li>
@@ -125,7 +126,10 @@ window.onload = wrap_img;
 <li class="toc-entry toc-h2"><a href="#try-2---styledcomponents">Try 2 - styled(components)</a></li>
 </ul>
 </li>
-</ul><p>When I first came up with the idea to highlight the current page with a rounded box, it sounded really easy to implement. I even decided to go really simple and make it just invert the background. So in <code class="language-plaintext highlighter-rouge">light</code> mode, it would be a black box which had white text insde, and the opposite for dark mode. What could go wrong?</p>
+</ul>
+    </nav>
+    <div class="post-main post-content e-content" itemprop="articleBody">
+     <p>When I first came up with the idea to highlight the current page with a rounded box, it sounded really easy to implement. I even decided to go really simple and make it just invert the background. So in <code class="language-plaintext highlighter-rouge">light</code> mode, it would be a black box which had white text insde, and the opposite for dark mode. What could go wrong?</p>
 
 <blockquote>
   <p>everything.</p>
@@ -133,8 +137,7 @@ window.onload = wrap_img;
 
 <p>Lets go through some of the blood sweat and tears I went through so you don’t have to go through the same!</p>
 
-<h1 id="inverting-colors">
-<a class="anchor" href="#inverting-colors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Inverting Colors</h1>
+<h1 id="inverting-colors">Inverting Colors</h1>
 
 <p>Essentially, I saw this css-tricks article about <a href="https://css-tricks.com/methods-contrasting-text-backgrounds/">contrasting text backgrounds</a> which involved using the <code class="language-plaintext highlighter-rouge">mix-blend-mode: difference;</code> CSS on the foreground so that it would invert its background. This would work flawlessly for the dark background with white foreground, and its also the example they gave in this article:</p>
 
@@ -150,22 +153,18 @@ window.onload = wrap_img;
 
 <p>However, try to do it for the opposite case and things come crashing down.</p>
 
-<h2 id="try-1-backdrop-filter">
-<a class="anchor" href="#try-1-backdrop-filter" aria-hidden="true"><span class="octicon octicon-link"></span></a>Try 1: backdrop-filter</h2>
+<h2 id="try-1-backdrop-filter">Try 1: backdrop-filter</h2>
 
 <p>I initially tried using this CSS, which applies a filter to the background of this image - this is actually how I have blurred everything when a user clicks the sandwich menu in mobile view. When combined with <code class="language-plaintext highlighter-rouge">contrast(2)</code> I was able to get commendable results on chrome. However, as soon as I tried using the website with firefox, the backdrop filter was no where to be found! This is because Mozilla Firefox have <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter">hidden the feature behind an experimental flag</a>…</p>
 
-<h2 id="try-2-back-to-mix-blend-mode">
-<a class="anchor" href="#try-2-back-to-mix-blend-mode" aria-hidden="true"><span class="octicon octicon-link"></span></a>Try 2: back to mix-blend-mode</h2>
+<h2 id="try-2-back-to-mix-blend-mode">Try 2: back to mix-blend-mode</h2>
 
 <p>So I went back to the original method, and decided on figuring out how to have this inverted color idea work for both light and dark modes. Essentially, I’ve found that I need to do the following things:</p>
 
 <ul>
   <li>color the text normally</li>
-  <li>color the inverting div <strong>white</strong>, with <code class="language-plaintext highlighter-rouge">mix-blend-mode: difference</code>
-</li>
-  <li>
-<strong>wrap everything in a div which provides the colors:</strong>
+  <li>color the inverting div <strong>white</strong>, with <code class="language-plaintext highlighter-rouge">mix-blend-mode: difference</code></li>
+  <li><strong>wrap everything in a div which provides the colors:</strong>
     <ul>
       <li><code class="language-plaintext highlighter-rouge">background: var(--color-background)</code></li>
       <li><code class="language-plaintext highlighter-rouge">color: var(--color-text)</code></li>
@@ -205,13 +204,11 @@ window.onload = wrap_img;
 <span class="p">&lt;/</span><span class="nc">ColorProvider</span><span class="p">&gt;;</span>
 </code></pre></div></div>
 
-<h1 id="fouc">
-<a class="anchor" href="#fouc" aria-hidden="true"><span class="octicon octicon-link"></span></a>FOUC</h1>
+<h1 id="fouc">FOUC</h1>
 
 <p>Flash of Unstyled Content is a prominent problem in Gatsby, as part of the reason why it can serve content so fast is because it prebuilds all the html. Because it can serve the html so fast, more often than not, the html loads first before CSS styles are loaded in, resulting in blank white unstyled content flickering before the styles load in. I did not like this.</p>
 
-<h2 id="try-1---maybe-material-ui">
-<a class="anchor" href="#try-1---maybe-material-ui" aria-hidden="true"><span class="octicon octicon-link"></span></a>Try 1 - Maybe Material-ui?</h2>
+<h2 id="try-1---maybe-material-ui">Try 1 - Maybe Material-ui?</h2>
 
 <p>I was using <code class="language-plaintext highlighter-rouge">material-ui</code> as its my goto web-ui toolkit. However, I nearly considered giving up this toolkit while making this website. It appeared that whenever I used their <code class="language-plaintext highlighter-rouge">themeProvider</code>, it would completely break my styles, display a FOUC, and transitions applied to the body did not apply to any <code class="language-plaintext highlighter-rouge">material-ui</code> components.</p>
 
@@ -219,8 +216,7 @@ window.onload = wrap_img;
 
 <p>However, even without <code class="language-plaintext highlighter-rouge">&lt;CssBaseline /&gt;</code>, things were still going sour, FOUC was showing, I was still awake at 2am trying to fix this.</p>
 
-<h2 id="try-2---styledcomponents">
-<a class="anchor" href="#try-2---styledcomponents" aria-hidden="true"><span class="octicon octicon-link"></span></a>Try 2 - styled(components)</h2>
+<h2 id="try-2---styledcomponents">Try 2 - styled(components)</h2>
 
 <p>TURNS OUT: I’ve been applying global styles through a component <code class="language-plaintext highlighter-rouge">createGlobalStyle</code> from <code class="language-plaintext highlighter-rouge">'styled-components'</code>. This applied a style to the body which set the <code class="language-plaintext highlighter-rouge">background-color</code> and <code class="language-plaintext highlighter-rouge">color</code>. It doesn’t seem to work immediately on page load, resulting in a flash of white in dark mode, before a transition to the proper color. So now, I create my own div styled with in-line CSS defining those color css variables. The result works like a charm!</p>
 
@@ -245,7 +241,53 @@ window.onload = wrap_img;
 
 <p>This is only the stuff I remembered that I fixed, there was so much trial and error, and me reloading the site 100 times, that I’ve probably forgotten half of the stuff I tried to do to fix these problems I had.</p>
 
-  </div><!-- from https://github.com/utterance/utterances -->
+    </div>
+  </div><!-- this handles current visible status in toc-->
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+    
+  let previousSection = null;
+  
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const id = entry.target.getAttribute('id');
+      if (entry.intersectionRatio > 0) {
+        document.querySelector(`nav li a[href="#${id}"]`).parentElement.classList.add('is-visible');
+        previousSection = id;
+        // console.log(`previousSection set to ${previousSection}`)
+      } else {
+        document.querySelector(`nav li a[href="#${id}"]`).parentElement.classList.remove('is-visible');
+      }
+    });
+    
+    let firstVisibleLink = document.querySelector('.is-visible > a').getAttribute('href');
+    
+    // console.log(`firstVisible: ${firstVisibleLink}`)
+    // console.log(`previousSection: ${previousSection}`)
+  
+    document.querySelectorAll('.active').forEach(elem => elem.classList.remove('active'))
+  
+    if (firstVisibleLink) {
+      document.querySelector(`.is-visible > a[href="${firstVisibleLink}"]`).parentElement.classList.add('active')
+      // console.log(`firstVisible should be active`)
+    }
+  
+    if (!firstVisibleLink && previousSection) {
+      document.querySelector(
+        `a[href="#${previousSection}"]`
+      ).parentElement.classList.add('active')
+      // console.log(`previousSection should be active`)
+
+    }
+  });
+  
+  // Track all sections that have an `id` applied
+  document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach((section) => {
+    observer.observe(section);
+  });
+
+});
+</script><!-- from https://github.com/utterance/utterances -->
 <script src="https://utteranc.es/client.js"
         repo="xpire/blog"
         issue-term="title"

@@ -118,8 +118,9 @@ window.onload = wrap_img;
 
     </header>
 
-  <div class="post-content e-content" itemprop="articleBody">
-    <ul class="section-nav">
+  <div class="main">
+    <nav class="post-nav post-content">
+      <ul class="section-nav">
 <li class="toc-entry toc-h2"><a href="#problem-1---secret-array">Problem 1 - Secret Array</a></li>
 <li class="toc-entry toc-h2">
 <a href="#problem-2---directory-manager">Problem 2 - Directory Manager</a>
@@ -131,12 +132,13 @@ window.onload = wrap_img;
 </ul>
 </li>
 </ul>
-<p><img src="./fwords_score.png" alt="Final leaderboard"></p>
+    </nav>
+    <div class="post-main post-content e-content" itemprop="articleBody">
+     <p><img src="./fwords_score.png" alt="Final leaderboard"></p>
 
 <p>This was one of the first CTFs I’ve competed in, and I’m pretty happy with the performance we obtained. I worked on two problems, one which I didn’t get in the end. But it was still a great learning experience. I definitely got carried by the other people in my team, who did really well in the <code class="language-plaintext highlighter-rouge">pwn</code> section.</p>
 
-<h2 id="problem-1---secret-array">
-<a class="anchor" href="#problem-1---secret-array" aria-hidden="true"><span class="octicon octicon-link"></span></a>Problem 1 - Secret Array</h2>
+<h2 id="problem-1---secret-array">Problem 1 - Secret Array</h2>
 
 <p><strong>TL;DR</strong></p>
 
@@ -245,13 +247,11 @@ a_2 + a_3 &amp;= b_3 \\
 
 <p>Now, when I was trying to get <code class="language-plaintext highlighter-rouge">pwntools</code> to work, I had made the moronically called the file <code class="language-plaintext highlighter-rouge">pwn.py</code> which was an internal file used in <code class="language-plaintext highlighter-rouge">pwntools</code>, so it failed, I eventually got my friend to run the code above and he got the flag :S.</p>
 
-<h2 id="problem-2---directory-manager">
-<a class="anchor" href="#problem-2---directory-manager" aria-hidden="true"><span class="octicon octicon-link"></span></a>Problem 2 - Directory Manager</h2>
+<h2 id="problem-2---directory-manager">Problem 2 - Directory Manager</h2>
 
 <p>This one was really hard and involved a Server Side Template Injection in python. I didn’t get it this time, but here are some things I found out that might prove useful in later CTFs.</p>
 
-<h3 id="recon">
-<a class="anchor" href="#recon" aria-hidden="true"><span class="octicon octicon-link"></span></a>Recon</h3>
+<h3 id="recon">Recon</h3>
 
 <p>I just kept trying different inputs, here are some examples of what I got</p>
 
@@ -274,8 +274,7 @@ anything where the second letter is an s: Thank you !
 
 <p>Ultimately, from the output interpretations of <code class="language-plaintext highlighter-rouge">dir</code> and <code class="language-plaintext highlighter-rouge">file</code>, I was pretty sure python code was executing. However, interestingly any input that contained the letter ‘s’ would fail with <code class="language-plaintext highlighter-rouge">Thank you !</code>.</p>
 
-<h3 id="intro-to-ssti">
-<a class="anchor" href="#intro-to-ssti" aria-hidden="true"><span class="octicon octicon-link"></span></a>Intro to SSTI</h3>
+<h3 id="intro-to-ssti">Intro to SSTI</h3>
 
 <p>In a previous challenge, I performed Server Side Template Injection (SSTI) and remote code execution (RCE) through a Flask template input by exploiting the fact that <code class="language-plaintext highlighter-rouge">file</code> is a built in type, and that there were certain builtin class functions that let you go from any one class to any other class.</p>
 
@@ -307,8 +306,7 @@ anything where the second letter is an s: Thank you !
 <span class="s">'root:x:0:0:root:/root:/bin/bash</span><span class="se">\n</span><span class="s">daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin</span><span class="se">\n</span><span class="s">bin:x:2:2:bin:/bin:/usr/sbin/nologin</span><span class="se">\n</span><span class="s">sys:x:3:3:sys:/dev:/usr/sbin/nologin</span><span class="se">\n</span><span class="s">sync:x:4:65534:sync:/bin:/bin/sync</span><span class="se">\n</span><span class="s">games:x:5:60:games:/usr/games:/usr/sbin/nologin</span><span class="se">\n</span><span class="s">man:x:6:12:man:/var/cache/man:/usr/sbin/nologin</span><span class="se">\n</span><span class="s">lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin</span><span class="se">\n</span><span class="s">mail:x:8:8:mail:/var/mail:/usr/sbin/nologin</span><span class="se">\n</span><span class="s">news:x:9:9:news:/var/spool/news:/usr/sbin/nologin</span><span class="se">\n</span><span class="s">uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin</span><span class="se">\n</span><span class="s">proxy:x:13:13:proxy:/bin:/usr/sbin/nologin</span><span class="se">\n</span><span class="s">www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin</span><span class="se">\n</span><span class="s">backup:x:34:34:backup:/var/backups:/usr/sbin/nologin</span><span class="se">\n</span><span class="s">list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin</span><span class="se">\n</span><span class="s">irc:x:39:39:ircd:/var/run/ircd:/usr/sbin/nologin</span><span class="se">\n</span><span class="s">gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin</span><span class="se">\n</span><span class="s">nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin</span><span class="se">\n</span><span class="s">_apt:x:100:65534::/nonexistent:/usr/sbin/nologin</span><span class="se">\n</span><span class="s">fword:x:1000:1000::/home/fword/:/bin/bash</span><span class="se">\n</span><span class="s">messagebus:x:101:101::/nonexistent:/usr/sbin/nologin</span><span class="se">\n</span><span class="s">'</span>
 </code></pre></div></div>
 
-<h3 id="no-s">
-<a class="anchor" href="#no-s" aria-hidden="true"><span class="octicon octicon-link"></span></a>no ‘s’</h3>
+<h3 id="no-s">no ‘s’</h3>
 
 <p>Now you can probably see why banning the letter ‘s’ would be problematic, as the letter ‘s’ appears in all the builtin functions we used to grab the file type.</p>
 
@@ -340,8 +338,7 @@ anything where the second letter is an s: Thank you !
 
 <p>Although I was able to read <code class="language-plaintext highlighter-rouge">/etc/passwd</code>, as well as some other common files like <code class="language-plaintext highlighter-rouge">.bashrc</code>, without access to the <code class="language-plaintext highlighter-rouge">os</code> library, I was unnable to get a list of the directory, to know which file to target.</p>
 
-<h3 id="failures">
-<a class="anchor" href="#failures" aria-hidden="true"><span class="octicon octicon-link"></span></a>Failures</h3>
+<h3 id="failures">Failures</h3>
 
 <p>I tried a lot of different things, here’s how they worked out:</p>
 
@@ -351,8 +348,54 @@ anything where the second letter is an s: Thank you !
 Really, I spent a few hours testing random directories and possible file names for the flag, but without access to <code class="language-plaintext highlighter-rouge">ls</code>, I am really at a loss for knowing which file to target. Hence I was unable to get the flag in the end.</li>
 </ul>
 
+    </div>
   </div>
-<!-- from https://github.com/utterance/utterances -->
+<!-- this handles current visible status in toc-->
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+    
+  let previousSection = null;
+  
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const id = entry.target.getAttribute('id');
+      if (entry.intersectionRatio > 0) {
+        document.querySelector(`nav li a[href="#${id}"]`).parentElement.classList.add('is-visible');
+        previousSection = id;
+        // console.log(`previousSection set to ${previousSection}`)
+      } else {
+        document.querySelector(`nav li a[href="#${id}"]`).parentElement.classList.remove('is-visible');
+      }
+    });
+    
+    let firstVisibleLink = document.querySelector('.is-visible > a').getAttribute('href');
+    
+    // console.log(`firstVisible: ${firstVisibleLink}`)
+    // console.log(`previousSection: ${previousSection}`)
+  
+    document.querySelectorAll('.active').forEach(elem => elem.classList.remove('active'))
+  
+    if (firstVisibleLink) {
+      document.querySelector(`.is-visible > a[href="${firstVisibleLink}"]`).parentElement.classList.add('active')
+      // console.log(`firstVisible should be active`)
+    }
+  
+    if (!firstVisibleLink && previousSection) {
+      document.querySelector(
+        `a[href="#${previousSection}"]`
+      ).parentElement.classList.add('active')
+      // console.log(`previousSection should be active`)
+
+    }
+  });
+  
+  // Track all sections that have an `id` applied
+  document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach((section) => {
+    observer.observe(section);
+  });
+
+});
+</script><!-- from https://github.com/utterance/utterances -->
 <script src="https://utteranc.es/client.js" repo="xpire/blog" issue-term="title" label="blogpost-comment" theme="github-dark" crossorigin="anonymous" async>
 </script><a class="u-url" href="/ctf/security/2020/09/01/fword2020-ctf.html" hidden></a>
 </article>

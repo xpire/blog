@@ -108,8 +108,9 @@ window.onload = wrap_img;
 
     </header>
 
-  <div class="post-content e-content" itemprop="articleBody">
-    <ul class="section-nav">
+  <div class="main">
+    <nav class="post-nav post-content">
+      <ul class="section-nav">
 <li class="toc-entry toc-h1"><a href="#criteria">Criteria</a></li>
 <li class="toc-entry toc-h1"><a href="#setting-up-gatsby">Setting up Gatsby</a>
 <ul>
@@ -117,12 +118,14 @@ window.onload = wrap_img;
 <li class="toc-entry toc-h2"><a href="#resources">Resources</a></li>
 </ul>
 </li>
-</ul><p><code class="language-plaintext highlighter-rouge">graphql</code> is was very confusing for me to use at first, but with the <code class="language-plaintext highlighter-rouge">___graphql</code> tool available during <code class="language-plaintext highlighter-rouge">gatsby develop</code>, I found that I could quickly learn how it works as I used it more and more. One of the issues I came across lately was trying to maintain two different markdown folders for blogs and projects respectively.</p>
+</ul>
+    </nav>
+    <div class="post-main post-content e-content" itemprop="articleBody">
+     <p><code class="language-plaintext highlighter-rouge">graphql</code> is was very confusing for me to use at first, but with the <code class="language-plaintext highlighter-rouge">___graphql</code> tool available during <code class="language-plaintext highlighter-rouge">gatsby develop</code>, I found that I could quickly learn how it works as I used it more and more. One of the issues I came across lately was trying to maintain two different markdown folders for blogs and projects respectively.</p>
 
 <p>From my research, I found another guide on how to do this, but their guide was for gatsby version 1, and I found that the requirement of providing metadata for project markdown files was a bit redundant, as you will see below. So here is my guide for creating a projects folder for your project markdown files to be serve on gatsby.</p>
 
-<h1 id="criteria">
-<a class="anchor" href="#criteria" aria-hidden="true"><span class="octicon octicon-link"></span></a>Criteria</h1>
+<h1 id="criteria">Criteria</h1>
 
 <ul>
   <li>You are using a set up similar to the the <a href="https://www.gatsbyjs.com/starters/gatsbyjs/gatsby-starter-blog/">gatsby starter blog</a>.</li>
@@ -149,8 +152,7 @@ window.onload = wrap_img;
 
 <p>Thats it! (nothing redundant like requiring a field to be added to each projects’ <code class="language-plaintext highlighter-rouge">index.md</code>…)</p>
 
-<h1 id="setting-up-gatsby">
-<a class="anchor" href="#setting-up-gatsby" aria-hidden="true"><span class="octicon octicon-link"></span></a>Setting up Gatsby</h1>
+<h1 id="setting-up-gatsby">Setting up Gatsby</h1>
 
 <p>In <code class="language-plaintext highlighter-rouge">gatsby-config.js</code>, add the following code in the plugins array:</p>
 
@@ -248,20 +250,64 @@ window.onload = wrap_img;
   <span class="p">}</span>
 </code></pre></div></div>
 
-<h2 id="hooking-up-the-frontend">
-<a class="anchor" href="#hooking-up-the-frontend" aria-hidden="true"><span class="octicon octicon-link"></span></a>Hooking up the frontend</h2>
+<h2 id="hooking-up-the-frontend">Hooking up the frontend</h2>
 
 <p>This is most of the “backend” work done, and the rest of the work consists of using this data. You can probably reuse the code examples given in the first resource I have linked below, or check out the <a href="https://github.com/xpire/website/tree/master/src/templates">source code for this blog you’re reading right now</a>. The harder part in my opinion was knowing how to use the absolute path in graphql in the page creation phase, as I really disliked having to label the <code class="language-plaintext highlighter-rouge">projects</code> markdown pages with an explicit field when I have already put it in its own folder.</p>
 
-<h2 id="resources">
-<a class="anchor" href="#resources" aria-hidden="true"><span class="octicon octicon-link"></span></a>Resources</h2>
+<h2 id="resources">Resources</h2>
 
 <ul>
   <li><a href="https://desktopofsamuel.com/building-gatsby-with-multiple-post-type">building gatsby with multiple post types</a></li>
   <li><a href="https://chipcullen.com/making-multiple-content-types-in-gatsby/">making multiple content types in gatsby</a></li>
 </ul>
 
-  </div><!-- from https://github.com/utterance/utterances -->
+    </div>
+  </div><!-- this handles current visible status in toc-->
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+    
+  let previousSection = null;
+  
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const id = entry.target.getAttribute('id');
+      if (entry.intersectionRatio > 0) {
+        document.querySelector(`nav li a[href="#${id}"]`).parentElement.classList.add('is-visible');
+        previousSection = id;
+        // console.log(`previousSection set to ${previousSection}`)
+      } else {
+        document.querySelector(`nav li a[href="#${id}"]`).parentElement.classList.remove('is-visible');
+      }
+    });
+    
+    let firstVisibleLink = document.querySelector('.is-visible > a').getAttribute('href');
+    
+    // console.log(`firstVisible: ${firstVisibleLink}`)
+    // console.log(`previousSection: ${previousSection}`)
+  
+    document.querySelectorAll('.active').forEach(elem => elem.classList.remove('active'))
+  
+    if (firstVisibleLink) {
+      document.querySelector(`.is-visible > a[href="${firstVisibleLink}"]`).parentElement.classList.add('active')
+      // console.log(`firstVisible should be active`)
+    }
+  
+    if (!firstVisibleLink && previousSection) {
+      document.querySelector(
+        `a[href="#${previousSection}"]`
+      ).parentElement.classList.add('active')
+      // console.log(`previousSection should be active`)
+
+    }
+  });
+  
+  // Track all sections that have an `id` applied
+  document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach((section) => {
+    observer.observe(section);
+  });
+
+});
+</script><!-- from https://github.com/utterance/utterances -->
 <script src="https://utteranc.es/client.js"
         repo="xpire/blog"
         issue-term="title"
