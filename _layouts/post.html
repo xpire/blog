@@ -54,9 +54,17 @@ layout: default
     {% endif -%}
   </header>
 
-  <div class="post-content e-content" itemprop="articleBody">
-    {{ content | toc  }}
+  <div class="main">
+    <nav class="post-nav post-content">
+      {% toc %}
+    </nav>
+    <div class="post-main post-content e-content" itemprop="articleBody">
+     {{ content }}
+    </div>
   </div>
+  
+  {%- include custom-toc.html -%}
+
   {%- if page.comments -%}
     {%- include utterances.html -%}
   {%- endif -%}
