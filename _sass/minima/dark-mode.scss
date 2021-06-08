@@ -6,6 +6,12 @@ $dark-grey: #121212;
 $overlay: mix($dark-grey, white, 95%);
 $overlay-light: mix($dark-grey, white, 86%);
 
+// colours
+$color1: #b9f18c;
+$color2: #e9eb87;
+$color3: #cbc5ea;
+$color4: #7b5e7b;
+
 //TODO: - Link clashes with flash message colour
 
 html,
@@ -106,4 +112,18 @@ canvas {
 
 li .post-meta-description {
   color: $med-emph !important;
+}
+
+// search result colours
+
+.search-result-rel-url {color: $color4;}
+.search-results-list-item a {color: $color3;}
+.search-result-rel-date {
+  color: $color2;
+}
+.search-result-preview {
+  color: $med-emph;
+}
+.search-result-highlight {
+  color: $color1;
 }
