@@ -463,6 +463,16 @@ canvas { filter: invert(100%); }
 
 li .post-meta-description { color: rgba(255, 255, 255, 0.69) !important; }
 
+.search-result-rel-url { color: #7b5e7b; }
+
+.search-results-list-item a { color: #cbc5ea; }
+
+.search-result-rel-date { color: #e9eb87; }
+
+.search-result-preview { color: rgba(255, 255, 255, 0.69); }
+
+.search-result-highlight { color: #b9f18c; }
+
 .site-header { font-family: "IBM Plex Mono", monospace; border: none; }
 
 .site-header a:hover { color: rgba(255, 255, 255, 0.69) !important; text-decoration: none !important; }
