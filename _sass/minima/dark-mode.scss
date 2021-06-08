@@ -115,15 +115,9 @@ li .post-meta-description {
 }
 
 // search result colours
-
+.search-results-list-item .search-result-title {color: $high-emph;}
 .search-result-rel-url {color: $color4;}
 .search-results-list-item a {color: $color3;}
-.search-result-rel-date {
-  color: $color2;
-}
-.search-result-preview {
-  color: $med-emph;
-}
-.search-result-highlight {
-  color: $color1;
-}
+.search-result-rel-date {color: $color2;}
+.search-result-preview {color: $med-emph;}
+.search-result-highlight {color: $color1;}
