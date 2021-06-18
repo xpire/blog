@@ -93,7 +93,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      6 min read
+      5 min read
     
 </span></p>
 
@@ -152,109 +152,20 @@ window.onload = wrap_img;
 
 <p>The HTML changes are actually really small, and only required <a href="https://github.com/toshimaru/jekyll-toc#advanced-usage">splitting the TOC and content</a> like so:</p>
 
-<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nt">&lt;div&gt;</span>
-    <span class="nt">&lt;nav&gt;</span>
-      <span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">"section-nav"</span><span class="nt">&gt;</span>
-<span class="nt">&lt;/ul&gt;</span>
-    <span class="nt">&lt;/nav&gt;</span>
-    <span class="nt">&lt;div&gt;</span>
-     <span class="nt">&lt;article</span> <span class="na">class=</span><span class="s">"post h-entry"</span> <span class="na">itemscope</span> <span class="na">itemtype=</span><span class="s">"http://schema.org/BlogPosting"</span><span class="nt">&gt;</span>
-
-  <span class="nt">&lt;header</span> <span class="na">class=</span><span class="s">"post-header"</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;h1</span> <span class="na">class=</span><span class="s">"post-title p-name"</span> <span class="na">itemprop=</span><span class="s">"name headline"</span><span class="nt">&gt;</span>COMP6771 Week 1 Notes<span class="nt">&lt;/h1&gt;&lt;p</span> <span class="na">class=</span><span class="s">"page-description"</span><span class="nt">&gt;</span>Introduction to C++ and setting up details<span class="nt">&lt;/p&gt;&lt;p</span> <span class="na">class=</span><span class="s">"post-meta post-meta-title"</span><span class="nt">&gt;&lt;time</span> <span class="na">class=</span><span class="s">"dt-published"</span> <span class="na">datetime=</span><span class="s">"2021-06-07T00:00:00-05:00"</span> <span class="na">itemprop=</span><span class="s">"datePublished"</span><span class="nt">&gt;</span>
-        Jun 7, 2021
-      <span class="nt">&lt;/time&gt;</span>
-       • <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"read-time"</span> <span class="na">title=</span><span class="s">"Estimated read time"</span><span class="nt">&gt;</span>
-    
-    
-      1 min read
-    
-<span class="nt">&lt;/span&gt;&lt;/p&gt;</span>
-
-    
-      <span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">"category-tags"</span><span class="nt">&gt;&lt;i</span> <span class="na">class=</span><span class="s">"fas fa-tags category-tags-icon"</span><span class="nt">&gt;&lt;/i&gt;&lt;/i&gt;</span> 
-      
-        <span class="nt">&lt;a</span> <span class="na">class=</span><span class="s">"category-tags-link"</span> <span class="na">href=</span><span class="s">"/categories/#comp6711"</span><span class="nt">&gt;</span>comp6711<span class="nt">&lt;/a&gt;</span>
-        <span class="ni">&amp;nbsp;</span>
-      
-        <span class="nt">&lt;a</span> <span class="na">class=</span><span class="s">"category-tags-link"</span> <span class="na">href=</span><span class="s">"/categories/#week01"</span><span class="nt">&gt;</span>week01<span class="nt">&lt;/a&gt;</span>
-        <span class="ni">&amp;nbsp;</span>
-      
-        <span class="nt">&lt;a</span> <span class="na">class=</span><span class="s">"category-tags-link"</span> <span class="na">href=</span><span class="s">"/categories/#markdown"</span><span class="nt">&gt;</span>markdown<span class="nt">&lt;/a&gt;</span>
-        
-      
-      <span class="nt">&lt;/p&gt;</span>
-    
-
-    <span class="nt">&lt;/header&gt;</span>
-
-  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"main"</span><span class="nt">&gt;</span>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"main"</span><span class="nt">&gt;</span>
     <span class="nt">&lt;nav</span> <span class="na">class=</span><span class="s">"post-nav post-content"</span><span class="nt">&gt;</span>
-      <span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">"section-nav"</span><span class="nt">&gt;</span>
-<span class="nt">&lt;/ul&gt;</span>
+      {\%\ toc \%\}
     <span class="nt">&lt;/nav&gt;</span>
     <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"post-main post-content e-content"</span> <span class="na">itemprop=</span><span class="s">"articleBody"</span><span class="nt">&gt;</span>
-     
-
-    <span class="nt">&lt;/div&gt;</span>
-  <span class="nt">&lt;/div&gt;</span><span class="c">&lt;!-- this handles current visible status in toc--&gt;</span>
-<span class="nt">&lt;script&gt;</span>
-<span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="dl">'</span><span class="s1">DOMContentLoaded</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    
-  <span class="kd">let</span> <span class="nx">previousSection</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-  
-  <span class="kd">const</span> <span class="nx">observer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">IntersectionObserver</span><span class="p">(</span><span class="nx">entries</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="nx">entries</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">entry</span> <span class="o">=&gt;</span> <span class="p">{</span>
-      <span class="kd">const</span> <span class="nx">id</span> <span class="o">=</span> <span class="nx">entry</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">getAttribute</span><span class="p">(</span><span class="dl">'</span><span class="s1">id</span><span class="dl">'</span><span class="p">);</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">entry</span><span class="p">.</span><span class="nx">intersectionRatio</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">`nav li a[href="#</span><span class="p">${</span><span class="nx">id</span><span class="p">}</span><span class="s2">"]`</span><span class="p">).</span><span class="nx">parentElement</span><span class="p">.</span><span class="nx">classList</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="dl">'</span><span class="s1">is-visible</span><span class="dl">'</span><span class="p">);</span>
-        <span class="nx">previousSection</span> <span class="o">=</span> <span class="nx">id</span><span class="p">;</span>
-        <span class="c1">// console.log(`previousSection set to ${previousSection}`)</span>
-      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">`nav li a[href="#</span><span class="p">${</span><span class="nx">id</span><span class="p">}</span><span class="s2">"]`</span><span class="p">).</span><span class="nx">parentElement</span><span class="p">.</span><span class="nx">classList</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="dl">'</span><span class="s1">is-visible</span><span class="dl">'</span><span class="p">);</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-    
-    <span class="kd">let</span> <span class="nx">firstVisibleLink</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="dl">'</span><span class="s1">.is-visible &gt; a</span><span class="dl">'</span><span class="p">).</span><span class="nx">getAttribute</span><span class="p">(</span><span class="dl">'</span><span class="s1">href</span><span class="dl">'</span><span class="p">);</span>
-    
-    <span class="c1">// console.log(`firstVisible: ${firstVisibleLink}`)</span>
-    <span class="c1">// console.log(`previousSection: ${previousSection}`)</span>
-  
-    <span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="dl">'</span><span class="s1">.active</span><span class="dl">'</span><span class="p">).</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">elem</span> <span class="o">=&gt;</span> <span class="nx">elem</span><span class="p">.</span><span class="nx">classList</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="dl">'</span><span class="s1">active</span><span class="dl">'</span><span class="p">))</span>
-  
-    <span class="k">if</span> <span class="p">(</span><span class="nx">firstVisibleLink</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">`.is-visible &gt; a[href="</span><span class="p">${</span><span class="nx">firstVisibleLink</span><span class="p">}</span><span class="s2">"]`</span><span class="p">).</span><span class="nx">parentElement</span><span class="p">.</span><span class="nx">classList</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="dl">'</span><span class="s1">active</span><span class="dl">'</span><span class="p">)</span>
-      <span class="c1">// console.log(`firstVisible should be active`)</span>
-    <span class="p">}</span>
-  
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">firstVisibleLink</span> <span class="o">&amp;&amp;</span> <span class="nx">previousSection</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span>
-        <span class="s2">`a[href="#</span><span class="p">${</span><span class="nx">previousSection</span><span class="p">}</span><span class="s2">"]`</span>
-      <span class="p">).</span><span class="nx">parentElement</span><span class="p">.</span><span class="nx">classList</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="dl">'</span><span class="s1">active</span><span class="dl">'</span><span class="p">)</span>
-      <span class="c1">// console.log(`previousSection should be active`)</span>
-
-    <span class="p">}</span>
-  <span class="p">});</span>
-  
-  <span class="c1">// Track all sections that have an `id` applied</span>
-  <span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="dl">'</span><span class="s1">h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]</span><span class="dl">'</span><span class="p">).</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">section</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="nx">observer</span><span class="p">.</span><span class="nx">observe</span><span class="p">(</span><span class="nx">section</span><span class="p">);</span>
-  <span class="p">});</span>
-
-<span class="p">});</span>
-<span class="nt">&lt;/script&gt;</span><span class="c">&lt;!-- from https://github.com/utterance/utterances --&gt;</span>
-<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"https://utteranc.es/client.js"</span>
-        <span class="na">repo=</span><span class="s">"xpire/blog"</span>
-        <span class="na">issue-term=</span><span class="s">"title"</span>
-        <span class="na">label=</span><span class="s">"blogpost-comment"</span>
-        <span class="na">theme=</span><span class="s">"github-dark"</span>
-        <span class="na">crossorigin=</span><span class="s">"anonymous"</span>
-        <span class="na">async</span><span class="nt">&gt;</span>
-<span class="nt">&lt;/script&gt;&lt;a</span> <span class="na">class=</span><span class="s">"u-url"</span> <span class="na">href=</span><span class="s">"/comp6711/week01/markdown/2021/06/07/comp6771-week-1-notes.html"</span> <span class="na">hidden</span><span class="nt">&gt;&lt;/a&gt;</span>
-<span class="nt">&lt;/article&gt;</span>
+     {\{\ content \}\}
     <span class="nt">&lt;/div&gt;</span>
   <span class="nt">&lt;/div&gt;</span>
 </code></pre></div></div>
+
+<div class="Toast">
+   <span class="Toast-icon"><svg class="octicon octicon-info octicon octicon-info" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8zm6.5-.25A.75.75 0 017.25 7h1a.75.75 0 01.75.75v2.75h.25a.75.75 0 010 1.5h-2a.75.75 0 010-1.5h.25v-2h-.25a.75.75 0 01-.75-.75zM8 6a1 1 0 100-2 1 1 0 000 2z"></path></svg></span>
+   <span class="Toast-content">I've had to escape the special characters to prevent accidental html injection into the example.</span>
+</div>
 
 <h2 id="css">CSS</h2>
 
