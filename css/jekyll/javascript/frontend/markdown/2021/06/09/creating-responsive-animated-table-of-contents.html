@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Creating Responsive Animated Table of Contents | Justin’s Blog</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Creating Responsive Animated Table of Contents" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="How I decided to build a TOC from scratch with jekyll" />
+<meta property="og:description" content="How I decided to build a TOC from scratch with jekyll" />
+<link rel="canonical" href="https://blog.justinor.dev/css/jekyll/javascript/frontend/markdown/2021/06/09/creating-responsive-animated-table-of-contents.html" />
+<meta property="og:url" content="https://blog.justinor.dev/css/jekyll/javascript/frontend/markdown/2021/06/09/creating-responsive-animated-table-of-contents.html" />
+<meta property="og:site_name" content="Justin’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-06-09T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"How I decided to build a TOC from scratch with jekyll","url":"https://blog.justinor.dev/css/jekyll/javascript/frontend/markdown/2021/06/09/creating-responsive-animated-table-of-contents.html","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.justinor.dev/css/jekyll/javascript/frontend/markdown/2021/06/09/creating-responsive-animated-table-of-contents.html"},"headline":"Creating Responsive Animated Table of Contents","dateModified":"2021-06-09T00:00:00-05:00","datePublished":"2021-06-09T00:00:00-05:00","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://blog.justinor.dev/feed.xml" title="Justin's Blog" /><link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Justin&#39;s Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About Me</a><a class="page-link" href="/search/">Search</a><a class="page-link" href="/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Creating Responsive Animated Table of Contents</h1><p class="page-description">How I decided to build a TOC from scratch with jekyll</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-06-09T00:00:00-05:00" itemprop="datePublished">
+        Jun 9, 2021
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      6 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/categories/#css">css</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#jekyll">jekyll</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#javascript">javascript</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#frontend">frontend</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#markdown">markdown</a>
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="main">
+    <nav class="post-nav post-content">
+      <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#inspiration">Inspiration</a></li>
+<li class="toc-entry toc-h1"><a href="#how-it-works">How it works</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#html">HTML</a></li>
+<li class="toc-entry toc-h2"><a href="#css">CSS</a></li>
+<li class="toc-entry toc-h2"><a href="#js">JS</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#conclusion">Conclusion</a></li>
+<li class="toc-entry toc-h1"><a href="#references">References</a></li>
+</ul>
+    </nav>
+    <div class="post-main post-content e-content" itemprop="articleBody">
+     <p>Hello! If you are reading this sentence, the Table of Contents (TOC) will be right above this sentence if you are on mobile, or if you are using a computer, it will be to the right of this text! If you scroll a bit, click on some of the links, you’ll find that the TOC is sticky, animated and just straight up looks so sick. Today I’ll talk about my process in getting this to work~</p>
+
+<h1 id="inspiration">Inspiration</h1>
+
+<p>I’ve always been a fan of those animated Table of Contents I’ve seen in many blogs before (<a href="https://www.joshwcomeau.com/react/dark-mode/">joshwcomeau.com</a>, <a href="https://material-ui.com/components/text-fields/">material-ui.com</a>, just to name a few). I had recently built this blog using <a href="https://fastpages.fast.ai/">fastpages</a>, and one of the benefits was a fully bootstrapped frontend that allowed you to use Markdown, word and jupyter notebooks as blog sources. I had resigned to the fact that I wouldn’t have to make much changes to the UI as I wanted to get the website up and running quickly, but then I came across the following Jekyll website: <a href="https://huangxuan.me/2015/05/25/js-module-loader/">huangxuan.me</a>. I was amazed, there was a Jekyll blog that had this amazing Table of Contents code implemented and it was actually possible! I finally had the confidence to try recreate this effect in my own blog.</p>
+
+<p><img src="/images/huangxuan.me.png" alt="" title="huangxuan's website" /></p>
+
+<h1 id="how-it-works">How it works</h1>
+
+<p>The custom TOC is made up of 3 major parts: the HTML, CSS and javascript. I’ll go through each briefly before deep diving into the journey and decisions.</p>
+
+<h2 id="html">HTML</h2>
+
+<p>The HTML changes are actually really small, and only required <a href="https://github.com/toshimaru/jekyll-toc#advanced-usage">splitting the TOC and content</a> like so:</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"main"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;nav</span> <span class="na">class=</span><span class="s">"post-nav post-content"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">"section-nav"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;/ul&gt;</span>
+    <span class="nt">&lt;/nav&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"post-main post-content e-content"</span> <span class="na">itemprop=</span><span class="s">"articleBody"</span><span class="nt">&gt;</span>
+     <span class="nt">&lt;article</span> <span class="na">class=</span><span class="s">"post h-entry"</span> <span class="na">itemscope</span> <span class="na">itemtype=</span><span class="s">"http://schema.org/BlogPosting"</span><span class="nt">&gt;</span>
+
+  <span class="nt">&lt;header</span> <span class="na">class=</span><span class="s">"post-header"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;h1</span> <span class="na">class=</span><span class="s">"post-title p-name"</span> <span class="na">itemprop=</span><span class="s">"name headline"</span><span class="nt">&gt;</span>COMP6771 Week 1 Notes<span class="nt">&lt;/h1&gt;&lt;p</span> <span class="na">class=</span><span class="s">"page-description"</span><span class="nt">&gt;</span>Introduction to C++ and setting up details<span class="nt">&lt;/p&gt;&lt;p</span> <span class="na">class=</span><span class="s">"post-meta post-meta-title"</span><span class="nt">&gt;&lt;time</span> <span class="na">class=</span><span class="s">"dt-published"</span> <span class="na">datetime=</span><span class="s">"2021-06-07T00:00:00-05:00"</span> <span class="na">itemprop=</span><span class="s">"datePublished"</span><span class="nt">&gt;</span>
+        Jun 7, 2021
+      <span class="nt">&lt;/time&gt;</span>
+       • <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"read-time"</span> <span class="na">title=</span><span class="s">"Estimated read time"</span><span class="nt">&gt;</span>
+    
+    
+      1 min read
+    
+<span class="nt">&lt;/span&gt;&lt;/p&gt;</span>
+
+    
+      <span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">"category-tags"</span><span class="nt">&gt;&lt;i</span> <span class="na">class=</span><span class="s">"fas fa-tags category-tags-icon"</span><span class="nt">&gt;&lt;/i&gt;&lt;/i&gt;</span> 
+      
+        <span class="nt">&lt;a</span> <span class="na">class=</span><span class="s">"category-tags-link"</span> <span class="na">href=</span><span class="s">"/categories/#comp6711"</span><span class="nt">&gt;</span>comp6711<span class="nt">&lt;/a&gt;</span>
+        <span class="ni">&amp;nbsp;</span>
+      
+        <span class="nt">&lt;a</span> <span class="na">class=</span><span class="s">"category-tags-link"</span> <span class="na">href=</span><span class="s">"/categories/#week01"</span><span class="nt">&gt;</span>week01<span class="nt">&lt;/a&gt;</span>
+        <span class="ni">&amp;nbsp;</span>
+      
+        <span class="nt">&lt;a</span> <span class="na">class=</span><span class="s">"category-tags-link"</span> <span class="na">href=</span><span class="s">"/categories/#markdown"</span><span class="nt">&gt;</span>markdown<span class="nt">&lt;/a&gt;</span>
+        
+      
+      <span class="nt">&lt;/p&gt;</span>
+    
+
+    <span class="nt">&lt;/header&gt;</span>
+
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"main"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;nav</span> <span class="na">class=</span><span class="s">"post-nav post-content"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">"section-nav"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;/ul&gt;</span>
+    <span class="nt">&lt;/nav&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"post-main post-content e-content"</span> <span class="na">itemprop=</span><span class="s">"articleBody"</span><span class="nt">&gt;</span>
+     
+
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/div&gt;</span><span class="c">&lt;!-- this handles current visible status in toc--&gt;</span>
+<span class="nt">&lt;script&gt;</span>
+<span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="dl">'</span><span class="s1">DOMContentLoaded</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    
+  <span class="kd">let</span> <span class="nx">previousSection</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  
+  <span class="kd">const</span> <span class="nx">observer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">IntersectionObserver</span><span class="p">(</span><span class="nx">entries</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">entries</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">entry</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">id</span> <span class="o">=</span> <span class="nx">entry</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">getAttribute</span><span class="p">(</span><span class="dl">'</span><span class="s1">id</span><span class="dl">'</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">entry</span><span class="p">.</span><span class="nx">intersectionRatio</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">`nav li a[href="#</span><span class="p">${</span><span class="nx">id</span><span class="p">}</span><span class="s2">"]`</span><span class="p">).</span><span class="nx">parentElement</span><span class="p">.</span><span class="nx">classList</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="dl">'</span><span class="s1">is-visible</span><span class="dl">'</span><span class="p">);</span>
+        <span class="nx">previousSection</span> <span class="o">=</span> <span class="nx">id</span><span class="p">;</span>
+        <span class="c1">// console.log(`previousSection set to ${previousSection}`)</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">`nav li a[href="#</span><span class="p">${</span><span class="nx">id</span><span class="p">}</span><span class="s2">"]`</span><span class="p">).</span><span class="nx">parentElement</span><span class="p">.</span><span class="nx">classList</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="dl">'</span><span class="s1">is-visible</span><span class="dl">'</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    
+    <span class="kd">let</span> <span class="nx">firstVisibleLink</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="dl">'</span><span class="s1">.is-visible &gt; a</span><span class="dl">'</span><span class="p">).</span><span class="nx">getAttribute</span><span class="p">(</span><span class="dl">'</span><span class="s1">href</span><span class="dl">'</span><span class="p">);</span>
+    
+    <span class="c1">// console.log(`firstVisible: ${firstVisibleLink}`)</span>
+    <span class="c1">// console.log(`previousSection: ${previousSection}`)</span>
+  
+    <span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="dl">'</span><span class="s1">.active</span><span class="dl">'</span><span class="p">).</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">elem</span> <span class="o">=&gt;</span> <span class="nx">elem</span><span class="p">.</span><span class="nx">classList</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="dl">'</span><span class="s1">active</span><span class="dl">'</span><span class="p">))</span>
+  
+    <span class="k">if</span> <span class="p">(</span><span class="nx">firstVisibleLink</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">`.is-visible &gt; a[href="</span><span class="p">${</span><span class="nx">firstVisibleLink</span><span class="p">}</span><span class="s2">"]`</span><span class="p">).</span><span class="nx">parentElement</span><span class="p">.</span><span class="nx">classList</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="dl">'</span><span class="s1">active</span><span class="dl">'</span><span class="p">)</span>
+      <span class="c1">// console.log(`firstVisible should be active`)</span>
+    <span class="p">}</span>
+  
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">firstVisibleLink</span> <span class="o">&amp;&amp;</span> <span class="nx">previousSection</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span>
+        <span class="s2">`a[href="#</span><span class="p">${</span><span class="nx">previousSection</span><span class="p">}</span><span class="s2">"]`</span>
+      <span class="p">).</span><span class="nx">parentElement</span><span class="p">.</span><span class="nx">classList</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="dl">'</span><span class="s1">active</span><span class="dl">'</span><span class="p">)</span>
+      <span class="c1">// console.log(`previousSection should be active`)</span>
+
+    <span class="p">}</span>
+  <span class="p">});</span>
+  
+  <span class="c1">// Track all sections that have an `id` applied</span>
+  <span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="dl">'</span><span class="s1">h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]</span><span class="dl">'</span><span class="p">).</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">section</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">observer</span><span class="p">.</span><span class="nx">observe</span><span class="p">(</span><span class="nx">section</span><span class="p">);</span>
+  <span class="p">});</span>
+
+<span class="p">});</span>
+<span class="nt">&lt;/script&gt;</span><span class="c">&lt;!-- from https://github.com/utterance/utterances --&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"https://utteranc.es/client.js"</span>
+        <span class="na">repo=</span><span class="s">"xpire/blog"</span>
+        <span class="na">issue-term=</span><span class="s">"title"</span>
+        <span class="na">label=</span><span class="s">"blogpost-comment"</span>
+        <span class="na">theme=</span><span class="s">"github-dark"</span>
+        <span class="na">crossorigin=</span><span class="s">"anonymous"</span>
+        <span class="na">async</span><span class="nt">&gt;</span>
+<span class="nt">&lt;/script&gt;&lt;a</span> <span class="na">class=</span><span class="s">"u-url"</span> <span class="na">href=</span><span class="s">"/comp6711/week01/markdown/2021/06/07/comp6771-week-1-notes.html"</span> <span class="na">hidden</span><span class="nt">&gt;&lt;/a&gt;</span>
+<span class="nt">&lt;/article&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+</code></pre></div></div>
+
+<h2 id="css">CSS</h2>
+
+<p>New CSS code can be injected into the <code class="language-plaintext highlighter-rouge">_sass/minima/</code> folder so I created a new file there thats imported into the <code class="language-plaintext highlighter-rouge">_sass/minima/custom-styles.scss</code> file. This new file contains the following CSS:</p>
+
+<div class="language-scss highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// smooth scrolling</span>
+<span class="nt">html</span> <span class="p">{</span>
+	<span class="na">scroll-behavior</span><span class="p">:</span> <span class="n">smooth</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">// transistion</span>
+<span class="nc">.post-nav</span> <span class="nt">a</span> <span class="p">{</span>
+    <span class="nl">transition</span><span class="p">:</span> <span class="n">all</span> <span class="m">100ms</span> <span class="n">ease-in-out</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">// hide bullet points</span>
+<span class="nc">.post-nav</span> <span class="nt">ul</span> <span class="p">{</span>
+    <span class="nl">list-style</span><span class="p">:</span> <span class="nb">none</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">// allow transitions to apply individually</span>
+<span class="nc">.post-nav</span> <span class="nt">li</span> <span class="o">&gt;</span> <span class="nt">a</span> <span class="p">{</span>
+    <span class="nl">display</span><span class="p">:</span> <span class="n">inline-block</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>A lot of this code came from a guide I was following by <a href="https://www.bram.us/2020/01/10/smooth-scrolling-sticky-scrollspy-navigation/">bram.us</a>. The comments explain whats going on. The cool thing is with the way we’ve designed the HTML is that the behaviour of the TOC is mobile first. The following code controls what happens when a device is wide enough to fit the sticky animated TOC:</p>
+
+<div class="language-scss highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@media</span> <span class="n">screen</span> <span class="nf">and</span> <span class="p">(</span><span class="n">min-width</span><span class="o">:</span> <span class="m">1200px</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// format grid with nav next to it</span>
+    <span class="nc">.main</span> <span class="p">{</span>
+        <span class="nl">display</span><span class="p">:</span> <span class="n">grid</span><span class="p">;</span>
+        <span class="na">grid-template-columns</span><span class="p">:</span> <span class="m">70%</span> <span class="nb">auto</span><span class="p">;</span>
+        <span class="na">grid-template-rows</span><span class="p">:</span> <span class="nb">auto</span><span class="p">;</span>
+        <span class="na">grid-template-areas</span><span class="p">:</span> <span class="s2">"post-main post-nav"</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nc">.post-main</span> <span class="p">{</span>
+        <span class="na">grid-area</span><span class="p">:</span> <span class="n">post-main</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nc">.post-nav</span> <span class="p">{</span>
+        <span class="na">grid-area</span><span class="p">:</span> <span class="n">post-nav</span><span class="p">;</span>
+        <span class="c1">// makes nav sticky</span>
+        <span class="nl">position</span><span class="p">:</span> <span class="n">sticky</span><span class="p">;</span>
+        <span class="nl">top</span><span class="p">:</span> <span class="m">2rem</span><span class="p">;</span>
+        <span class="nl">align-self</span><span class="p">:</span> <span class="n">start</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// only show active CSS if large screen</span>
+    <span class="nc">.post-nav</span> <span class="nt">li</span><span class="nc">.active</span> <span class="o">&gt;</span> <span class="nt">a</span> <span class="p">{</span>
+        <span class="nl">color</span><span class="p">:</span> <span class="nv">$high-emph</span><span class="p">;</span>
+        <span class="nl">font-weight</span><span class="p">:</span> <span class="m">500</span><span class="p">;</span>
+        <span class="nl">transform</span><span class="p">:</span> <span class="nf">translateX</span><span class="p">(</span><span class="m">5px</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>I tried a lot of things, but it was <code class="language-plaintext highlighter-rouge">display: grid</code> that ended up working the best. I tried <code class="language-plaintext highlighter-rouge">display: flex</code> first, but that screwed up the max width of the blog itself, and I ran into so many issues just getting this column split to function as expected. The most powerful part of this design is the fact that I’m able to use the same TOC for both mobile and desktop displays!</p>
+
+<p>It was also pretty easy to make the TOC sticky, and the final CSS applies the visual effect when the active class is present. Now for the javascript to wire everything up correctly.</p>
+
+<h2 id="js">JS</h2>
+
+<p>Jekyll lets you inject javascript into the document with an include statement, which references a javascript script in the <code class="language-plaintext highlighter-rouge">_includes</code> folder. The main problem I was facing that didn’t occur with bram.us’s code, was that his code was designed so that all the titles and it’s contents were wrapped in sections, so he only needed to keep track of whether a section was intersecting the screen to highlight that TOC element. For my output, there was no such design, and as soon as the Heading was out of view, the TOC element for that heading would also stop highlighting, which was a problem. However, google came to the rescue, as I found an amazing blog: <a href="https://tj.ie/building-a-table-of-contents-with-the-intersection-observer-api/">tj.ie</a>. I have to really thank him for writing an awesome blog on how he solved the exact problem I was having.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!--</span> <span class="k">this</span> <span class="nx">handles</span> <span class="nx">current</span> <span class="nx">visible</span> <span class="nx">status</span> <span class="k">in</span> <span class="nx">toc</span><span class="o">--&gt;</span>
+<span class="o">&lt;</span><span class="nx">script</span><span class="o">&gt;</span>
+<span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="dl">'</span><span class="s1">DOMContentLoaded</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    
+  <span class="kd">let</span> <span class="nx">previousSection</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  
+  <span class="kd">const</span> <span class="nx">observer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">IntersectionObserver</span><span class="p">(</span><span class="nx">entries</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">entries</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">entry</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">id</span> <span class="o">=</span> <span class="nx">entry</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">getAttribute</span><span class="p">(</span><span class="dl">'</span><span class="s1">id</span><span class="dl">'</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">entry</span><span class="p">.</span><span class="nx">intersectionRatio</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">`nav li a[href="#</span><span class="p">${</span><span class="nx">id</span><span class="p">}</span><span class="s2">"]`</span><span class="p">).</span><span class="nx">parentElement</span><span class="p">.</span><span class="nx">classList</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="dl">'</span><span class="s1">is-visible</span><span class="dl">'</span><span class="p">);</span>
+        <span class="nx">previousSection</span> <span class="o">=</span> <span class="nx">id</span><span class="p">;</span>
+        <span class="c1">// console.log(`previousSection set to ${previousSection}`)</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">`nav li a[href="#</span><span class="p">${</span><span class="nx">id</span><span class="p">}</span><span class="s2">"]`</span><span class="p">).</span><span class="nx">parentElement</span><span class="p">.</span><span class="nx">classList</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="dl">'</span><span class="s1">is-visible</span><span class="dl">'</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    
+    <span class="kd">let</span> <span class="nx">firstVisibleLink</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="dl">'</span><span class="s1">.is-visible &gt; a</span><span class="dl">'</span><span class="p">).</span><span class="nx">getAttribute</span><span class="p">(</span><span class="dl">'</span><span class="s1">href</span><span class="dl">'</span><span class="p">);</span>
+    
+    <span class="c1">// console.log(`firstVisible: ${firstVisibleLink}`)</span>
+    <span class="c1">// console.log(`previousSection: ${previousSection}`)</span>
+  
+    <span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="dl">'</span><span class="s1">.active</span><span class="dl">'</span><span class="p">).</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">elem</span> <span class="o">=&gt;</span> <span class="nx">elem</span><span class="p">.</span><span class="nx">classList</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="dl">'</span><span class="s1">active</span><span class="dl">'</span><span class="p">))</span>
+  
+    <span class="k">if</span> <span class="p">(</span><span class="nx">firstVisibleLink</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">`.is-visible &gt; a[href="</span><span class="p">${</span><span class="nx">firstVisibleLink</span><span class="p">}</span><span class="s2">"]`</span><span class="p">).</span><span class="nx">parentElement</span><span class="p">.</span><span class="nx">classList</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="dl">'</span><span class="s1">active</span><span class="dl">'</span><span class="p">)</span>
+      <span class="c1">// console.log(`firstVisible should be active`)</span>
+    <span class="p">}</span>
+  
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">firstVisibleLink</span> <span class="o">&amp;&amp;</span> <span class="nx">previousSection</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span>
+        <span class="s2">`a[href="#</span><span class="p">${</span><span class="nx">previousSection</span><span class="p">}</span><span class="s2">"]`</span>
+      <span class="p">).</span><span class="nx">parentElement</span><span class="p">.</span><span class="nx">classList</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="dl">'</span><span class="s1">active</span><span class="dl">'</span><span class="p">)</span>
+      <span class="c1">// console.log(`previousSection should be active`)</span>
+
+    <span class="p">}</span>
+  <span class="p">});</span>
+  
+  <span class="c1">// Track all sections that have an `id` applied</span>
+  <span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="dl">'</span><span class="s1">h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]</span><span class="dl">'</span><span class="p">).</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">section</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">observer</span><span class="p">.</span><span class="nx">observe</span><span class="p">(</span><span class="nx">section</span><span class="p">);</span>
+  <span class="p">});</span>
+
+<span class="p">});</span>
+<span class="o">&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span></code></pre></div></div>
+
+<p>The solution involved storing a global variable <code class="language-plaintext highlighter-rouge">previousSection</code>, which kept track of the previously highlighed section. Thus, when an Observer updated and all headings were out of sight after scrolling a bit, the code would know that we are still in the previous section and keep that TOC heading highlighted. Please read the blog for more information.</p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>I’m just writing a more lines so the TOC can be truly showcased XD</p>
+
+<p>But I’m very happy with the overall result, and if there was one improvement I could make, it would be to emulate the amazing animated highlighting line in this concept by <a href="https://lab.hakim.se/progress-nav/">lab.hakim.se</a>.</p>
+
+<h1 id="references">References</h1>
+
+<ul>
+  <li><a href="https://huangxuan.me/2015/05/25/js-module-loader/">huangxuan.me</a></li>
+  <li><a href="https://www.bram.us/2020/01/10/smooth-scrolling-sticky-scrollspy-navigation/">bram.us</a></li>
+  <li><a href="https://tj.ie/building-a-table-of-contents-with-the-intersection-observer-api/">tj.ie</a></li>
+</ul>
+
+    </div>
+  </div><!-- this handles current visible status in toc-->
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+    
+  let previousSection = null;
+  
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const id = entry.target.getAttribute('id');
+      if (entry.intersectionRatio > 0) {
+        document.querySelector(`nav li a[href="#${id}"]`).parentElement.classList.add('is-visible');
+        previousSection = id;
+        // console.log(`previousSection set to ${previousSection}`)
+      } else {
+        document.querySelector(`nav li a[href="#${id}"]`).parentElement.classList.remove('is-visible');
+      }
+    });
+    
+    let firstVisibleLink = document.querySelector('.is-visible > a').getAttribute('href');
+    
+    // console.log(`firstVisible: ${firstVisibleLink}`)
+    // console.log(`previousSection: ${previousSection}`)
+  
+    document.querySelectorAll('.active').forEach(elem => elem.classList.remove('active'))
+  
+    if (firstVisibleLink) {
+      document.querySelector(`.is-visible > a[href="${firstVisibleLink}"]`).parentElement.classList.add('active')
+      // console.log(`firstVisible should be active`)
+    }
+  
+    if (!firstVisibleLink && previousSection) {
+      document.querySelector(
+        `a[href="#${previousSection}"]`
+      ).parentElement.classList.add('active')
+      // console.log(`previousSection should be active`)
+
+    }
+  });
+  
+  // Track all sections that have an `id` applied
+  document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach((section) => {
+    observer.observe(section);
+  });
+
+});
+</script><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="xpire/blog"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-dark"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/css/jekyll/javascript/frontend/markdown/2021/06/09/creating-responsive-animated-table-of-contents.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Justin Or&#39;s personal Blog!</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/xpire" title="xpire"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/just_in_awe" title="just_in_awe"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
