@@ -25,15 +25,17 @@ The custom TOC is made up of 3 major parts: the HTML, CSS and javascript. I'll g
 The HTML changes are actually really small, and only required [splitting the TOC and content](https://github.com/toshimaru/jekyll-toc#advanced-usage) like so:
 
 ```html
-  <div>
-    <nav>
-      {% toc %}
+  <div class="main">
+    <nav class="post-nav post-content">
+      {\%\ toc \%\}
     </nav>
-    <div>
-     {{ content }}
+    <div class="post-main post-content e-content" itemprop="articleBody">
+     {\{\ content \}\}
     </div>
   </div>
 ```
+
+{% include info.html text="I've had to escape the special characters to prevent accidental html injection into the example." %}
 
 ## CSS
 
