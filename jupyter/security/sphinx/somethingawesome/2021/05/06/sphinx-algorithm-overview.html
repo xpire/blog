@@ -178,6 +178,17 @@ window.onload = wrap_img;
 
 <div class="container" id="notebook-container">
         
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>
+<center>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/watch?v=jta72Zj-l14" frameborder="0" allowfullscreen=""></iframe>
+</center>
+</p>
+
+</div>
+</div>
+</div>
     
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -185,7 +196,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">ecdsa.ellipticcurve</span> <span class="k">as</span> <span class="nn">ecc</span>
+<div class=" highlight hl-python"><pre><span></span><span class="kn">import</span> <span class="nn">ecdsa.ellipticcurve</span> <span class="k">as</span> <span class="nn">ecc</span>
 <span class="kn">import</span> <span class="nn">ecdsa.numbertheory</span> <span class="k">as</span> <span class="nn">nt</span>
 </pre></div>
 
@@ -223,7 +234,7 @@ If I have:</p>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">sendDH</span><span class="p">(</span><span class="n">privateKey</span><span class="p">,</span> <span class="n">generator</span><span class="p">,</span> <span class="n">sendFunction</span><span class="p">):</span>
+<div class=" highlight hl-python"><pre><span></span><span class="k">def</span> <span class="nf">sendDH</span><span class="p">(</span><span class="n">privateKey</span><span class="p">,</span> <span class="n">generator</span><span class="p">,</span> <span class="n">sendFunction</span><span class="p">):</span>
    <span class="k">return</span> <span class="n">sendFunction</span><span class="p">(</span><span class="n">privateKey</span> <span class="o">*</span> <span class="n">generator</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">receiveDH</span><span class="p">(</span><span class="n">privateKey</span><span class="p">,</span> <span class="n">receiveFunction</span><span class="p">):</span>
@@ -250,7 +261,7 @@ If I have:</p>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">aliceSecretKey</span> <span class="o">=</span> <span class="mi">233</span>    <span class="c1"># generateSecretKey(8)</span>
+<div class=" highlight hl-python"><pre><span></span><span class="n">aliceSecretKey</span> <span class="o">=</span> <span class="mi">233</span>    <span class="c1"># generateSecretKey(8)</span>
 <span class="n">bobSecretKey</span> <span class="o">=</span> <span class="mi">25</span>       <span class="c1"># generateSecretKey(8)</span>
 
 <span class="n">alicePublicKey</span> <span class="o">=</span> <span class="n">sendDH</span><span class="p">(</span><span class="n">aliceSecretKey</span><span class="p">,</span> <span class="n">basePoint</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">)</span>
@@ -274,7 +285,7 @@ If I have:</p>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">myCurve</span><span class="p">)</span>
+<div class=" highlight hl-python"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">myCurve</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">basePoint</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Shared secret is </span><span class="si">%s</span><span class="s1"> == </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">sharedSecret1</span><span class="p">,</span> <span class="n">sharedSecret2</span><span class="p">))</span>
 </pre></div>
@@ -411,7 +422,7 @@ SEND THIS AS $\alpha$</li>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># NIST Curve P-256:</span>
+<div class=" highlight hl-python"><pre><span></span><span class="c1"># NIST Curve P-256:</span>
 <span class="c1"># ORDER = 115792089210356248762697446949407573529996955224135760342422259061068512044369</span>
 <span class="n">PRIME</span> <span class="o">=</span> <span class="mi">115792089210356248762697446949407573530086143415290314195533631308867097853951</span>
 <span class="n">R</span> <span class="o">=</span> <span class="mi">115792089210356248762697446949407573529996955224135760342422259061068512044369</span>
@@ -482,7 +493,7 @@ a and b.</code></pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">binascii</span> <span class="kn">import</span> <span class="n">hexlify</span><span class="p">,</span> <span class="n">unhexlify</span>
+<div class=" highlight hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">binascii</span> <span class="kn">import</span> <span class="n">hexlify</span><span class="p">,</span> <span class="n">unhexlify</span>
 <span class="kn">from</span> <span class="nn">hashlib</span> <span class="kn">import</span> <span class="n">sha1</span><span class="p">,</span> <span class="n">sha256</span><span class="p">,</span> <span class="n">sha384</span><span class="p">,</span> <span class="n">sha512</span>
 <span class="kn">import</span> <span class="nn">hashlib</span>
 <span class="kn">from</span> <span class="nn">ecdsa</span> <span class="kn">import</span> <span class="n">NIST256p</span>
@@ -649,7 +660,7 @@ o  CTEQ(a, b): Returns a == b.  Inputs a and b must be the same
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CHECK: ensure p = </span><span class="si">{}</span><span class="s2"> = 3 mod 4, </span><span class="si">{}</span><span class="s2">mod4 = 3mod4: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">PRIME</span><span class="p">,</span> <span class="n">PRIME</span><span class="o">%</span><span class="k">4</span>, PRIME%4==3))
+<div class=" highlight hl-python"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CHECK: ensure p = </span><span class="si">{}</span><span class="s2"> = 3 mod 4, </span><span class="si">{}</span><span class="s2">mod4 = 3mod4: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">PRIME</span><span class="p">,</span> <span class="n">PRIME</span><span class="o">%</span><span class="mi">4</span><span class="p">,</span> <span class="n">PRIME</span><span class="o">%</span><span class="mi">4</span><span class="o">==</span><span class="mi">3</span><span class="p">))</span>
 
 <span class="c1"># https://tools.ietf.org/html/draft-irtf-cfrg-hash-to-curve-02#section-5.2.3</span>
 <span class="c1"># Implementation of H&#39; which maps from bytearray -&gt; g \in G</span>
@@ -714,8 +725,8 @@ o  CTEQ(a, b): Returns a == b.  Inputs a and b must be the same
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;3. X3=alpha*X2= </span><span class="se">\t\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">X3</span><span class="p">)</span> <span class="k">if</span> <span class="n">debug</span> <span class="k">else</span> <span class="kc">None</span>
     
     <span class="c1"># h2 = g(X2), h3 = g(x3), if g(x) = x^3 + Ax + B</span>
-    <span class="n">h2</span> <span class="o">=</span> <span class="p">(</span><span class="nb">pow</span><span class="p">(</span><span class="n">X2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">PRIME</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">A</span> <span class="o">*</span> <span class="n">X2</span><span class="p">)</span><span class="o">%</span><span class="k">PRIME</span> + B) % PRIME
-    <span class="n">h3</span> <span class="o">=</span> <span class="p">(</span><span class="nb">pow</span><span class="p">(</span><span class="n">X3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">PRIME</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">A</span> <span class="o">*</span> <span class="n">X3</span><span class="p">)</span><span class="o">%</span><span class="k">PRIME</span> + B) % PRIME
+    <span class="n">h2</span> <span class="o">=</span> <span class="p">(</span><span class="nb">pow</span><span class="p">(</span><span class="n">X2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">PRIME</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">A</span> <span class="o">*</span> <span class="n">X2</span><span class="p">)</span><span class="o">%</span><span class="n">PRIME</span> <span class="o">+</span> <span class="n">B</span><span class="p">)</span> <span class="o">%</span> <span class="n">PRIME</span>
+    <span class="n">h3</span> <span class="o">=</span> <span class="p">(</span><span class="nb">pow</span><span class="p">(</span><span class="n">X3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">PRIME</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">A</span> <span class="o">*</span> <span class="n">X3</span><span class="p">)</span><span class="o">%</span><span class="n">PRIME</span> <span class="o">+</span> <span class="n">B</span><span class="p">)</span> <span class="o">%</span> <span class="n">PRIME</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;4.1 g(X2)= </span><span class="se">\t\t\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">h2</span><span class="p">)</span> <span class="k">if</span> <span class="n">debug</span> <span class="k">else</span> <span class="kc">None</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;4.2 g(X3)= </span><span class="se">\t\t\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">h3</span><span class="p">)</span> <span class="k">if</span> <span class="n">debug</span> <span class="k">else</span> <span class="kc">None</span>
     <span class="n">sh2</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">h2</span><span class="p">,</span> <span class="p">(</span><span class="n">PRIME</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">//</span><span class="mi">4</span><span class="p">,</span> <span class="n">PRIME</span><span class="p">)</span>
@@ -766,7 +777,7 @@ o  CTEQ(a, b): Returns a == b.  Inputs a and b must be the same
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_cases</span> <span class="o">=</span> <span class="mi">30</span>
+<div class=" highlight hl-python"><pre><span></span><span class="n">test_cases</span> <span class="o">=</span> <span class="mi">30</span>
 <span class="n">correct</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">correct_list</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">test_cases</span><span class="p">):</span>
@@ -806,7 +817,7 @@ o  CTEQ(a, b): Returns a == b.  Inputs a and b must be the same
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_cases</span> <span class="o">=</span> <span class="mi">30</span>
+<div class=" highlight hl-python"><pre><span></span><span class="n">test_cases</span> <span class="o">=</span> <span class="mi">30</span>
 <span class="n">correct</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">correct_list</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">test_cases</span><span class="p">):</span>
@@ -852,7 +863,7 @@ o  CTEQ(a, b): Returns a == b.  Inputs a and b must be the same
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">map2curve_simple_swu</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;passwordwww.facebook.com&quot;</span><span class="p">))</span>
+<div class=" highlight hl-python"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">map2curve_simple_swu</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;passwordwww.facebook.com&quot;</span><span class="p">))</span>
 
 <span class="c1"># or you can use the og swu implementation</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">my_swu</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;passwordwww.facebook.com&quot;</span><span class="p">))</span>
@@ -919,7 +930,7 @@ o  CTEQ(a, b): Returns a == b.  Inputs a and b must be the same
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;masterpasswordwww.google.com&quot;</span>
+<div class=" highlight hl-python"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;masterpasswordwww.google.com&quot;</span>
 <span class="n">hdashx</span> <span class="o">=</span> <span class="n">map2curve_simple_swu</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;H&#39;(x):&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">hdashx</span><span class="p">)</span>
@@ -964,7 +975,7 @@ alpha = (H&#39;(x))^rho:
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="p">(</span><span class="n">curve_256</span><span class="o">.</span><span class="n">contains_point</span><span class="p">(</span><span class="n">alpha</span><span class="o">.</span><span class="n">x</span><span class="p">(),</span> <span class="n">alpha</span><span class="o">.</span><span class="n">y</span><span class="p">())</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-python"><pre><span></span><span class="k">assert</span> <span class="p">(</span><span class="n">curve_256</span><span class="o">.</span><span class="n">contains_point</span><span class="p">(</span><span class="n">alpha</span><span class="o">.</span><span class="n">x</span><span class="p">(),</span> <span class="n">alpha</span><span class="o">.</span><span class="n">y</span><span class="p">())</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span>
 <span class="n">d</span> <span class="o">=</span> <span class="n">HashToBase</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;some random way to produce this d key&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;d = &quot;</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="nb">hex</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
@@ -1006,7 +1017,7 @@ beta = alpha^d:
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="p">(</span><span class="n">curve_256</span><span class="o">.</span><span class="n">contains_point</span><span class="p">(</span><span class="n">beta</span><span class="o">.</span><span class="n">x</span><span class="p">(),</span> <span class="n">beta</span><span class="o">.</span><span class="n">y</span><span class="p">())</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-python"><pre><span></span><span class="k">assert</span> <span class="p">(</span><span class="n">curve_256</span><span class="o">.</span><span class="n">contains_point</span><span class="p">(</span><span class="n">beta</span><span class="o">.</span><span class="n">x</span><span class="p">(),</span> <span class="n">beta</span><span class="o">.</span><span class="n">y</span><span class="p">())</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span>
 <span class="c1"># n.b.</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;rho^-1 * rho = &quot;</span><span class="p">,</span><span class="nb">pow</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">PRIME</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">PRIME</span><span class="p">)</span> <span class="o">*</span> <span class="n">rho</span> <span class="o">%</span> <span class="n">PRIME</span><span class="p">)</span>
 <span class="n">final</span> <span class="o">=</span> <span class="n">beta</span> <span class="o">*</span> <span class="nb">pow</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">ORDER</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">ORDER</span><span class="p">)</span>
@@ -1046,7 +1057,7 @@ final = beta^(1/rho)
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">check_final</span> <span class="o">=</span> <span class="n">hdashx</span> <span class="o">*</span> <span class="n">d</span>
+<div class=" highlight hl-python"><pre><span></span><span class="n">check_final</span> <span class="o">=</span> <span class="n">hdashx</span> <span class="o">*</span> <span class="n">d</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">check_final</span><span class="p">)</span>
 <span class="k">assert</span> <span class="p">(</span><span class="n">curve_256</span><span class="o">.</span><span class="n">contains_point</span><span class="p">(</span><span class="n">check_final</span><span class="o">.</span><span class="n">x</span><span class="p">(),</span> <span class="n">check_final</span><span class="o">.</span><span class="n">y</span><span class="p">())</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Check that this result `check final` equals `final`:&quot;</span><span class="p">)</span>
@@ -1083,7 +1094,7 @@ True
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Oblivious Psuedo-Random Function</span>
+<div class=" highlight hl-python"><pre><span></span><span class="c1"># Oblivious Psuedo-Random Function</span>
 <span class="k">def</span> <span class="nf">OPRF</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">point</span><span class="p">:</span> <span class="n">ecc</span><span class="o">.</span><span class="n">Point</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytearray</span><span class="p">:</span>
     <span class="sd">&#39;&#39;&#39;Performs the actual Hash H of H(x, (H&#39;(X))^d), which is the hash of a</span>
 <span class="sd">       bytearray x and a Point on the curve. Returns a bytearray result.</span>
@@ -1147,7 +1158,7 @@ Your facebook password is:  %*U(8#vcudIgdGoKK7#mH4^)fjGzEnMK
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;masterpasswordwww.google.com&quot;</span>
+<div class=" highlight hl-python"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;masterpasswordwww.google.com&quot;</span>
 
 <span class="c1"># Client 1</span>
 <span class="k">def</span> <span class="nf">clientToPoint</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ecc</span><span class="o">.</span><span class="n">Point</span><span class="p">:</span>
