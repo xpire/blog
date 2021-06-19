@@ -14,7 +14,7 @@ Hello! If you are reading this sentence, the Table of Contents (TOC) will be rig
 I've always been a fan of those animated Table of Contents I've seen in many blogs before ([joshwcomeau.com](https://www.joshwcomeau.com/react/dark-mode/), [material-ui.com](https://material-ui.com/components/text-fields/), just to name a few). I had recently built this blog using [fastpages](https://fastpages.fast.ai/), and one of the benefits was a fully bootstrapped frontend that allowed you to use Markdown, word and jupyter notebooks as blog sources. I had resigned to the fact that I wouldn't have to make much changes to the UI as I wanted to get the website up and running quickly, but then I came across the following Jekyll website: [huangxuan.me](https://huangxuan.me/2015/05/25/js-module-loader/). I was amazed, there was a Jekyll blog that had this amazing Table of Contents code implemented and it was actually possible! I finally had the confidence to try recreate this effect in my own blog.
 
 
-![]({{ site.baseurl }}/images/huangxuan.me.png "huangxuan's website")
+![](./huangxuan.me.png "huangxuan's website")
 
 # How it works
 
@@ -35,7 +35,7 @@ The HTML changes are actually really small, and only required [splitting the TOC
   </div>
 ```
 
-{% include info.html text="I've had to escape the special characters to prevent accidental html injection into the example." %}
+{% include important.html content="I've had to escape the special characters to prevent accidental html injection into the example." %}
 
 ## CSS
 
